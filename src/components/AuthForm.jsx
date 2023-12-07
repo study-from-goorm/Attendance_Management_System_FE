@@ -1,45 +1,16 @@
-import { Link, json, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, Form, useActionData } from 'react-router-dom';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
-import { useDispatch } from 'react-redux';
-import { setCookieToken } from '../auth/cookie';
-import { setToken } from '../store/authSlice';
 
 function AuthForm() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const errorMsg = useActionData();
+  console.log('errorMsg', errorMsg);
 
   let isPlayer = true;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const fd = new FormData(e.target);
-    const authData = Object.fromEntries(fd.entries());
-    const response = await fetch('http://localhost:8080/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(authData),
-    });
-
-    if (response.status === 422 || response.status === 401) {
-      return response;
-    }
-
-    if (!response.ok) {
-      throw json({ message: 'Could not authenticate user.' }, { status: 500 });
-    }
-
-    const resData = await response.json();
-    if (response.status === 200 && resData) {
-      setCookieToken(resData.refreshToken);
-      dispatch(setToken(resData.accessToken));
-
-      return navigate('/player');
-    }
-  };
+  if (searchParams.get('mode') === 'admin') {
+    isPlayer = false;
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -64,7 +35,7 @@ function AuthForm() {
             Admin
           </Link>
         </div>
-        <form onSubmit={handleSubmit} method="post" className="space-y-4">
+        <Form method="post" className="space-y-4">
           <div>
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
@@ -81,6 +52,9 @@ function AuthForm() {
               name="password"
             />
           </div>
+          {errorMsg && (
+            <h4 className=" text-red-400 text-center">{errorMsg}</h4>
+          )}
           <div className="text-center">
             <Button
               type="primary"
@@ -90,7 +64,7 @@ function AuthForm() {
               Log in
             </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );

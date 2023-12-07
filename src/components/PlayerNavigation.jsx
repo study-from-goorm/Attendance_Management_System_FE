@@ -1,10 +1,7 @@
 import { NavLink, Form } from 'react-router-dom';
 import classes from './PlayerNavigation.module.css';
-import { useSelector } from 'react-redux';
 
 function PlayerNavigation() {
-  const isAuthenticated = useSelector((state) => state.auth.authenticated);
-  console.log('isAuthenticated', isAuthenticated);
   return (
     <header className={classes.header}>
       <nav>
