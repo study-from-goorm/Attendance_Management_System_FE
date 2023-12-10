@@ -22,10 +22,9 @@ function MainLayout() {
         return null;
     }
   }
-
+  console.log('authenticated', authenticated);
   return (
     <>
-      <p>main layout...</p>
       <Outlet />
     </>
   );

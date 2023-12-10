@@ -33,7 +33,7 @@ export async function action({ request }) {
     );
 
     const token = response?.data?.token;
-    const role = 'player'; // TODO: get from data
+    const role = 'admin'; // TODO: get from data
 
     store.dispatch(setUser({ role, username: authData.email }));
     store.dispatch(setToken(token));

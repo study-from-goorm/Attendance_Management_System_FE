@@ -9,10 +9,8 @@ function RoleRouter({ allowedRoles, children }) {
 
   // eslint-disable-next-line react/prop-types
   if (role && allowedRoles?.includes(role)) {
-    console.log('위!!!');
     return <>{children}</>;
   }
-  console.log('아래!!');
   return <Unauthorized state={{ from: location }} replace />;
 }
 

@@ -14,25 +14,25 @@ function AuthForm() {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="bg-gray-200 w-full max-w-md p-6 text-black rounded-lg">
-        <h2 className="text-center text-2xl font-bold mb-4">로그인</h2>
-        <div className="flex justify-center mb-6">
+      <div className="bg-secondary-color w-full max-w-md p-6 text-white rounded-lg">
+        <h2 className="text-center text-2xl font-bold mb-4">출석관리 시스템</h2>
+        <div className="flex justify-center mb-6 gap-x-2">
           {/* toggle effect */}
           <Link
             to={`?mode=player`}
-            className={`px-4 py-2 ${
-              isPlayer ? 'bg-gray-800 text-white' : 'bg-gray-200'
+            className={`px-4 py-2 rounded-lg ${
+              isPlayer ? 'bg-primary-color' : 'bg-neutral-color opacity-80'
             }`}
           >
-            Player
+            플레이어
           </Link>
           <Link
             to={`?mode=admin`}
-            className={`px-4 py-2 ${
-              isPlayer ? 'bg-gray-200' : 'bg-gray-800 text-white'
+            className={`px-4 py-2 rounded-lg ${
+              isPlayer ? 'bg-neutral-color opacity-80' : 'bg-primary-color'
             }`}
           >
-            Admin
+            관리자
           </Link>
         </div>
         <Form method="post" className="space-y-4">
@@ -56,13 +56,9 @@ function AuthForm() {
             <h4 className=" text-red-400 text-center">{errorMsg}</h4>
           )}
           <div className="text-center">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-            >
-              Log in
-            </Button>
+            <button className="bg-primary-color py-2 px-4 rounded-lg opacity-80 hover:opacity-100">
+              로그인
+            </button>
           </div>
         </Form>
       </div>

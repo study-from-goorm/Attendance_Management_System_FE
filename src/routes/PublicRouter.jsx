@@ -9,7 +9,12 @@ function PublicRouter() {
   if (authenticated && accessToken) {
     return <Navigate to="/player" state={{ from: location }} replace />;
   }
-  return <Outlet />;
+  return (
+    <>
+      <h1>귀하는 로그인 되어있지 않습니다.</h1>
+      <Outlet />
+    </>
+  );
 }
 
 export default PublicRouter;

@@ -5,6 +5,7 @@ import { deleteToken } from '../../store/authSlice';
 import { removeUser } from '../../store/userSlice';
 
 export function action() {
+  console.log('action 실행');
   // localStorage.removeItem('token');
   // localStorage.removeItem('expiration');
   // logout시에도 백엔드랑 응답해야하나?
