@@ -3,7 +3,7 @@ import PageContent from '../components/PageContent';
 
 function ErrorPage() {
   const error = useRouteError();
-
+  console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', error);
   let title = 'An error occurred!';
   let message = 'Something went wrong!';
 
@@ -12,7 +12,7 @@ function ErrorPage() {
   }
 
   if (error.status === 404) {
-    title = 'Not found!';
+    title = 'Not found!111';
     message = 'Could not find resource or page.';
   }
 

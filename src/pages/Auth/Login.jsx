@@ -1,6 +1,6 @@
 import AuthForm from '../../components/AuthForm';
 import { json, redirect } from 'react-router-dom';
-import { axiosPrivate } from '../../api/axiosInstance';
+import { axiosPublic } from '../../api/axiosInstance';
 import store from '../../store';
 import { setUser } from '../../store/userSlice';
 import { setToken } from '../../store/authSlice';
@@ -27,10 +27,7 @@ export async function action({ request }) {
   };
 
   try {
-    const response = await axiosPrivate.post(
-      '/login',
-      JSON.stringify(authData),
-    );
+    const response = await axiosPublic.post('/login', JSON.stringify(authData));
 
     const token = response?.data?.token;
     const role = 'admin'; // TODO: get from data
@@ -42,7 +39,6 @@ export async function action({ request }) {
 
     return redirect(`/${mode}`);
   } catch (err) {
-    console.log('error!', err);
     if (err.code === 'ERR_NETWORK') {
       return '네트워크 오류가 발생하였습니다.';
     } else if (err.code === 'ERR_BAD_REQUEST') {
