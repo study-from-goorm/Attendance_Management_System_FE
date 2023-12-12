@@ -3,15 +3,24 @@ import React from 'react';
 import CustomDatePicker from './CustomDatePicker';
 import moment from "moment";
 
-const DateSessionSelector = ({ currentDate, currentSession, dates, handleDateChange, handleSessionChange, handleAllAttendance }) => {
+const DateSessionSelector = ({
+                                 currentDate,
+                                 currentSession,
+                                 attendanceData,
+                                 handleDateChange,
+                                 handleSessionChange,
+                                 handleAllAttendance
+                             }) => {
+    console.log("=>(DateSessionSelector.jsx:18) attendanceData", Object.keys(attendanceData[currentDate]));
     return (
         <div>
-            <CustomDatePicker value={moment(currentDate)} onDateChange={handleDateChange}/>
+            <CustomDatePicker value={currentDate} onDateChange={handleDateChange}/>
             <select onChange={handleSessionChange} value={currentSession}
                     className="mb-4 border rounded px-2 py-1 text-sm text-black">
-                {currentDate && Object.keys(dates[currentDate]).map((sessionKey, index) => (
-                    <option key={index} value={sessionKey}>{sessionKey}</option>
+                {Object.keys(attendanceData[currentDate]).map((session, i) => (
+                    <option key={i} value={session}>{session}</option>
                 ))}
+
             </select>
             <button onClick={handleAllAttendance}>모두 출석</button>
         </div>

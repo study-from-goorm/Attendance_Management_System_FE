@@ -1,83 +1,106 @@
-import React, {useCallback, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, {useCallback, useEffect, useState} from 'react';
 import SelectAttendance from './SelectAttendanceBox.jsx';
 import DateSessionSelector from "./DateSessionSelector.jsx";
-import {
-    getCurrentDate,
-    getCurrentSession,
-    selectStudentsBySession,
-    getData,
-    updateAttendance,
-    updateDate,
-    updateSession,
-    updateAllAttendance, submitAttendanceChanges, getChangedData,
-} from "../../store/AttendanceSlice.js";
+import {axiosPrivate} from "../../api/axiosInstance.js";
+import { Table } from 'antd'
 
 
 const AttendanceTable = () => {
-    const dispatch = useDispatch();
-    const currentDate = useSelector(getCurrentDate);
-    console.log("=>(AttendanceManagement.jsx:20) currentDate", currentDate);
-    const currentSession = useSelector(getCurrentSession);
-    const dates = useSelector(getData);
-    const attendanceData = useSelector(selectStudentsBySession);
-    const changedData = useSelector(getChangedData);
-    console.log("=>(AttendanceManagement.jsx:12) changedData", changedData);
+    const [dates, setDates] = useState({});
+    const [attendanceData, setAttendanceData] = useState({}); // 초기 상태를 빈 객체로 설정
+    const [currentDate, setCurrentDate] = useState('2023-12-01');
+    const [currentSession, setCurrentSession] = useState('풀스택 1회차');
+    const [changedData, setChangedData] = useState([]);
 
-    const [prevDate, setPrevDate] = useState(currentDate);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosPrivate.get('/api/dummyData');
+                setAttendanceData(response.data); // 혹은 response.data를 적절히 변환하여 사용
+                setDates(Object.keys(response.data));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
-    //날짜 변경하기
+    //날짜 변경 시 이전 날짜 저장
     const handleDateChange = useCallback((date, dateString) => {
-        if (!dates[dateString]) {
-            alert("해당 날짜에 데이터가 없습니다.")
-            dispatch(updateDate(prevDate));
+        if (!attendanceData[dateString]) {
+            alert("해당 날짜에 데이터가 없습니다.");
             return;
         }
-        setPrevDate(currentDate);
-        dispatch(updateDate(dateString));
-    }, [dispatch, dates, currentDate, prevDate]);
+        setCurrentDate(dateString);
+    }, [attendanceData]);
 
     //회차 변경하기
     const handleSessionChange = useCallback((e) => {
-        dispatch(updateSession(e.target.value));
-    }, [dispatch]);
+        setCurrentSession(e.target.value);
+    }, []);
 
     //출결 체크박스 선택
     const handleChange = useCallback((e, studentIndex, periodIndex) => {
-        dispatch(updateAttendance({
-            currentDate: currentDate,
-            currentSession: currentSession,
-            studentIndex,
-            periodIndex,
-            value: e.target.value
-        }));
-    }, [dispatch, currentDate, currentSession]);
+        // 여기에서 attendanceData를 업데이트하는 로직 구현
+        const updatedData = {...attendanceData}; // 현재 상태의 얕은 복사본
+        const sessionData = updatedData[currentDate][currentSession];
+
+        if (sessionData) {
+            sessionData[studentIndex].periods[periodIndex] = e.target.value;
+            setAttendanceData(updatedData); // 업데이트된 상태 설정
+            setChangedData([...changedData, {studentIndex, periodIndex, value: e.target.value}]);
+        }
+    }, [attendanceData, currentDate, currentSession, changedData]);
 
     //모두 출석 처리
     const handleAllAttendance = useCallback(() => {
-        dispatch(updateAllAttendance({
-            currentDate: currentDate,
-            currentSession: currentSession,
-            value: "출석"
-        }));
-    }, [dispatch, currentDate, currentSession]);
+        const updatedData = {...attendanceData};
+        const sessionData = updatedData[currentDate][currentSession];
+        let updatedChangedData = [...changedData];
+
+        if (sessionData) {
+            sessionData.forEach((student, studentIndex) => {
+                student.periods.forEach((_, periodIndex) => {
+                    if (student.periods[periodIndex] !== "출석") {
+                        updatedChangedData.push({
+                            studentIndex,
+                            periodIndex,
+                            value: "출석"
+                        });
+                    }
+                    student.periods[periodIndex] = "출석";
+                });
+            });
+
+            setAttendanceData(updatedData); // 업데이트된 상태 설정
+            setChangedData(updatedChangedData); // 변경된 데이터 추가
+        }
+    }, [attendanceData, currentDate, currentSession, changedData]);
+
 
     //변경 사항 제출
-    const handleSubmit = () => {
-        dispatch(submitAttendanceChanges(changedData));
+    const handleSubmit = async () => {
+        try {
+            await axiosPrivate.post('/api/updateAttendance', changedData);
+            alert('변경 사항이 성공적으로 제출되었습니다.');
+        } catch (error) {
+            console.error('Error submitting data:', error);
+        }
     };
 
 
-    //데이터가 없을 때
-    if (!attendanceData || attendanceData.length === 0) {
-        return <div>Loading...</div>; // 또는 적절한 메시지 표시
+    const sessionAttendanceData = attendanceData[currentDate]?.[currentSession];
+
+    if (!sessionAttendanceData || sessionAttendanceData.length === 0) {
+        return <div>Loading...</div>;
     }
+
     return (
         <div>
             <DateSessionSelector
                 currentDate={currentDate}
                 currentSession={currentSession}
-                dates={dates}
+                attendanceData={attendanceData}
                 handleDateChange={handleDateChange}
                 handleSessionChange={handleSessionChange}
                 handleAllAttendance={handleAllAttendance}
@@ -90,7 +113,7 @@ const AttendanceTable = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {attendanceData && attendanceData.map((student, studentIndex) => (
+                {sessionAttendanceData.map((student, studentIndex) => (
                     <tr key={studentIndex}>
                         <td>{student.name}</td>
                         {student.periods.map((status, periodIndex) => (
