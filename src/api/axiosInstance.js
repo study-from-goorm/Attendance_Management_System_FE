@@ -31,5 +31,3 @@ axiosPrivate.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-// 211.215.180.216:9999/admin/courses

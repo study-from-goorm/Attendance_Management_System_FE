@@ -35,6 +35,12 @@
   color: white !important;
 }
 
+.ant-btn.ant-btn-text:hover {
+  background-color: transparent !important;
+  border-color: none !important;
+  color: var(--primary-color) !important;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

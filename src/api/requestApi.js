@@ -65,16 +65,3 @@ export async function fetchCourses() {
     throw err;
   }
 }
-
-// Player Personal Info
-export async function fetchPlayerData(playerId, year, month) {
-  try {
-    const response = await axiosPrivate.get(
-      `/player/${playerId}/${year}/${month}`
-    );
-    return response.data;
-  } catch (err) {
-    console.error("플레이어 정보를 불러올 수 없습니다", err);
-    throw err;
-  }
-}
