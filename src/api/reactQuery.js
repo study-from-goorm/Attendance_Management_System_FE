@@ -71,7 +71,47 @@ export async function fetchCourses() {
     const response = await axiosPrivate.get('/admin/courses');
     return response.data;
   } catch (err) {
-    console.error('과정정보를 불러오지 못하였습니다', err);
-    throw err;
+    throw new Error(err.message || 'Failed to fetch courses');
+  }
+}
+
+export async function fetchCourse({ signal, id }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/course/${id}`, {
+      signal: signal,
+    });
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || 'Failed to fetch course');
+  }
+}
+
+export async function createNewCourse(courseData) {
+  try {
+    const response = await axiosPrivate.post('/admin/courses', courseData);
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || 'Failed to create courses');
+  }
+}
+
+export async function updateCourse({ id, courseData }) {
+  try {
+    const response = await axiosPrivate.patch(
+      `/admin/course/${id}`,
+      courseData,
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || 'Failed to update course');
+  }
+}
+
+export async function deleteCourse({ id }) {
+  try {
+    const response = await axiosPrivate.delete(`/admin/course/${id}`);
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || 'Failed to delete course');
   }
 }

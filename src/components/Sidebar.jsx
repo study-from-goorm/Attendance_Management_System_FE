@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa6';
 import { IoMdCloudOutline, IoIosLogOut } from 'react-icons/io';
 import { IoHomeOutline, IoSettingsOutline } from 'react-icons/io5';
-
+import { SiGoogleclassroom } from 'react-icons/si';
 import { getCurrentUser } from '../store/userSlice';
 import { useSelector } from 'react-redux';
 import { NavLink, Form } from 'react-router-dom';
@@ -46,6 +46,17 @@ const Sidebar = () => {
                 >
                   <IoHomeOutline className="text-xl" />
                   <span className="font-medium ml-2">대시보드</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/admin/courses"
+                  className={({ isActive }) =>
+                    `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
+                  }
+                >
+                  <SiGoogleclassroom className="text-xl" />
+                  <span className="font-medium ml-2">과정 정보</span>
                 </NavLink>
               </li>
               <li>

@@ -25,7 +25,6 @@ function NewPlayer() {
   };
 
   const handleSubmit = (formData) => {
-    console.log('newPlayer handlesubmit', formData);
     mutate(formData);
   };
   return (
