@@ -22,7 +22,6 @@ function MainLayout() {
         return null;
     }
   }
-  console.log('authenticated', authenticated);
   return (
     <>
       <Outlet />

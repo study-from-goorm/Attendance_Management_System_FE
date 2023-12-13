@@ -5,7 +5,6 @@ import { Button, Input } from 'antd';
 function AuthForm() {
   const [searchParams] = useSearchParams();
   const errorMsg = useActionData();
-  console.log('errorMsg', errorMsg);
 
   let isPlayer = true;
   if (searchParams.get('mode') === 'admin') {
