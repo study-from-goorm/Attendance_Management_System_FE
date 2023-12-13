@@ -2,27 +2,28 @@
 import React from 'react';
 import CustomDatePicker from './CustomDatePicker';
 import moment from "moment";
+import {Button, Select} from "antd";
 
 const DateSessionSelector = ({
-                                 currentDate,
-                                 currentSession,
-                                 attendanceData,
-                                 handleDateChange,
-                                 handleSessionChange,
-                                 handleAllAttendance
+                             currentDate,
+                             currentSession,
+                             dateSession,
+                             handleDateChange,
+                             handleSessionChange,
+                             handleAllAttendance,
+                             handleSubmit
                              }) => {
-    console.log("=>(DateSessionSelector.jsx:18) attendanceData", Object.keys(attendanceData[currentDate]));
+    console.log("=>(DateSessionSelector.jsx:18) attendanceData", Object.keys(dateSession[currentDate]));
     return (
-        <div>
+        <div className="sticky top-[50px] z-10 mb-4 ">
             <CustomDatePicker value={currentDate} onDateChange={handleDateChange}/>
-            <select onChange={handleSessionChange} value={currentSession}
-                    className="mb-4 border rounded px-2 py-1 text-sm text-black">
-                {Object.keys(attendanceData[currentDate]).map((session, i) => (
-                    <option key={i} value={session}>{session}</option>
+            <Select onChange={handleSessionChange} value={currentSession} className="mb-4" >
+                {Object.keys(dateSession[currentDate]).map((session, i) => (
+                    <Select.Option key={i} value={session}>{session}</Select.Option>
                 ))}
-
-            </select>
-            <button onClick={handleAllAttendance}>모두 출석</button>
+            </Select>
+            <Button type={"primary"} onClick={handleAllAttendance}>모두 출석</Button>
+            <Button type={"primary"} onClick={handleSubmit}>변경 사항 제출</Button>
         </div>
     );
 };
