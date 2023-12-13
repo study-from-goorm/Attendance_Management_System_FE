@@ -45,12 +45,22 @@ export async function createNewPlayer(playerData) {
 export async function updatePlayer({ id, playerData }) {
   try {
     const response = await axiosPrivate.patch(
-      `/admin/players/${id}`,
+      `/admin/player/${id}`,
       playerData,
     );
     return response.data;
   } catch (err) {
     console.error('플레이어 수정에 실패하였습니다.', err);
+    throw err;
+  }
+}
+
+export async function deletePlayer({ id }) {
+  try {
+    const response = await axiosPrivate.delete(`/admin/player/${id}`);
+    return response.data;
+  } catch (err) {
+    console.error('플레이어 삭제에 실패하였습니다.', err);
     throw err;
   }
 }

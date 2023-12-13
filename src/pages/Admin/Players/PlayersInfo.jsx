@@ -1,5 +1,4 @@
 import { Card, Button, Select } from 'antd';
-import { axiosPrivate } from '../../../api/axiosInstance';
 import PageTitle from '../../../components/PageTitle';
 import { useState, useEffect } from 'react';
 import {
@@ -8,8 +7,13 @@ import {
   Outlet,
   useNavigate,
 } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCourses, fetchPlayersByCourse } from '../../../api/reactQuery';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deletePlayer,
+  fetchCourses,
+  fetchPlayersByCourse,
+  queryClient,
+} from '../../../api/reactQuery';
 import LoadingIndicator from '../../../components/UI/LoadingIndicator';
 import PlayersInfoTable from './PlayersInfoTable';
 
@@ -50,6 +54,13 @@ function PlayersInfo() {
     },
   });
 
+  const { mutate } = useMutation({
+    mutationFn: deletePlayer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['players'] });
+    },
+  });
+
   const handleSelectCourse = () => {
     setSearchedCourse(selectedCourse);
     if (selectedCourse) {
@@ -67,8 +78,11 @@ function PlayersInfo() {
     navigate(`/admin/players/new${queryString}`);
   };
 
-  const handleDeletePlayer = () => {
-    console.log('handleDeletePlayer!!');
+  const handleDeletePlayer = (playerId, playerName) => {
+    if (confirm(`${playerName}를 제거하시겠습니가?`)) {
+      mutate({ id: playerId });
+    }
+    return false;
   };
 
   let content = null;

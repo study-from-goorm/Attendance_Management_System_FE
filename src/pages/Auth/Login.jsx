@@ -22,17 +22,20 @@ export async function action({ request }) {
 
   const data = await request.formData();
   const authData = {
-    email: data.get('email'),
+    username: data.get('email'),
     password: data.get('password'),
   };
 
   try {
-    const response = await axiosPublic.post('/login', JSON.stringify(authData));
+    const response = await axiosPublic.post(
+      '/login/admin',
+      JSON.stringify(authData),
+    );
 
-    const token = response?.data?.token;
+    const token = response?.data?.accessToken;
     const role = 'admin'; // TODO: get from data
 
-    store.dispatch(setUser({ role, username: authData.email }));
+    store.dispatch(setUser({ role, username: authData.username }));
     store.dispatch(setToken(token));
 
     setCookieToken(token);
