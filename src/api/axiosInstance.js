@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '../store';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://211.215.180.216:9999';
 
 export const axiosPublic = axios.create({
   baseURL: BASE_URL,
@@ -31,3 +31,5 @@ axiosPrivate.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
+// 211.215.180.216:9999/admin/courses

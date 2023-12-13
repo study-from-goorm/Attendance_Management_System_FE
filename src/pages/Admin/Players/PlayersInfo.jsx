@@ -1,22 +1,38 @@
 import { Card, Button, Select } from 'antd';
 import { axiosPrivate } from '../../../api/axiosInstance';
 import PageTitle from '../../../components/PageTitle';
-import { useState, Suspense } from 'react';
-import { useLoaderData, defer, Await } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+  useLoaderData,
+  useSearchParams,
+  Outlet,
+  useNavigate,
+} from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { fetchPlayersByCourse } from '../../../api/reactQuery';
+import { fetchCourses, fetchPlayersByCourse } from '../../../api/reactQuery';
 import LoadingIndicator from '../../../components/UI/LoadingIndicator';
+import PlayersInfoTable from './PlayersInfoTable';
 
 function PlayersInfo() {
   const [selectedCourse, setSelectedCourse] = useState();
   const [searchedCourse, setSearchedCourse] = useState();
-  const { courses } = useLoaderData();
+  const courses = useLoaderData();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const currentCourse = searchParams.get('course');
+  const queryString = currentCourse ? `?course=${currentCourse}` : '';
+  useEffect(() => {
+    const courseQueryParam = searchParams.get('course');
+    if (courseQueryParam) {
+      setSearchedCourse(parseInt(courseQueryParam));
+      setSelectedCourse(parseInt(courseQueryParam));
+    }
+  }, [searchParams]);
 
   const {
     data: players,
     isLoading,
-    isFetching,
-    isPending,
     isError,
     error,
   } = useQuery({
@@ -24,14 +40,35 @@ function PlayersInfo() {
     queryFn: ({ signal, queryKey }) =>
       fetchPlayersByCourse({ signal, ...queryKey[1] }),
     enabled: searchedCourse !== undefined,
+    select: (players) => {
+      const updated = players.map((player) => {
+        const { playerId, ...otherPros } = player;
+        return { key: playerId, ...otherPros };
+      });
+
+      return updated;
+    },
   });
 
-  const handleSelectCourse = async () => {
+  const handleSelectCourse = () => {
     setSearchedCourse(selectedCourse);
+    if (selectedCourse) {
+      setSearchParams({ course: selectedCourse });
+    } else {
+      setSearchParams({});
+    }
   };
 
   const handleChange = (value) => {
     setSelectedCourse(value);
+  };
+
+  const handleNavigate = () => {
+    navigate(`/admin/players/new${queryString}`);
+  };
+
+  const handleDeletePlayer = () => {
+    console.log('handleDeletePlayer!!');
   };
 
   let content = null;
@@ -51,50 +88,44 @@ function PlayersInfo() {
   }
 
   if (players) {
-    content = <p>데이터 들어왔음1</p>;
+    content = (
+      <PlayersInfoTable
+        players={players}
+        queryString={queryString}
+        handleDeletePlayer={handleDeletePlayer}
+      />
+    );
   }
-
-  console.log('isPending', isPending);
-  console.log('isLoading', isLoading);
-  console.log('isFetching', isFetching);
 
   return (
     <>
+      <Outlet />
       <PageTitle title="플레이어 정보" />
-      <Card className="flex">
-        <Suspense
-          fallback={
-            <Select
-              placeholder="로딩중 입니다...🙂"
-              style={{ width: 240 }}
-              disabled
-            ></Select>
-          }
-        >
-          <Await
-            resolve={courses}
-            errorElement={
-              <p className="inline-block text-secondary-color">
-                과정정보를 불러오지 못하였습니다.😭
-              </p>
-            }
-          >
-            {(loadedCourses) => {
-              return (
-                <Select
-                  style={{ width: 240 }}
-                  options={loadedCourses}
-                  allowClear
-                  placeholder="과정을 선택해 주세요."
-                  onChange={handleChange}
-                />
-              );
-            }}
-          </Await>
-        </Suspense>
-        <Button type="primary" className="ml-4" onClick={handleSelectCourse}>
-          검색
-        </Button>
+      <Card
+        bodyStyle={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div className="space-x-2">
+          <Select
+            style={{ width: 240 }}
+            options={courses}
+            allowClear
+            placeholder="과정을 선택해 주세요."
+            defaultValue={searchedCourse ? searchedCourse : null}
+            value={selectedCourse}
+            onChange={handleChange}
+          />
+          <Button type="primary" onClick={handleSelectCourse}>
+            검색
+          </Button>
+        </div>
+        <div className="flex-1 text-right">
+          <Button type="primary" onClick={handleNavigate}>
+            플레이어 등록하기
+          </Button>
+        </div>
       </Card>
       <Card className={searchedCourse ? '' : 'hidden'}>{content}</Card>
     </>
@@ -103,22 +134,12 @@ function PlayersInfo() {
 
 export default PlayersInfo;
 
-async function loadCourses() {
-  try {
-    const response = await axiosPrivate.get('/admin/courses');
-    const courseOptions = response.data.map((course) => ({
-      value: course.courseId.toString(),
-      label: course.courseName,
-    }));
-
-    return courseOptions;
-  } catch (err) {
-    console.error('과정정보를 불러오지 못하였습니다.');
-  }
-}
-
 export async function loader() {
-  return defer({
-    courses: loadCourses(),
-  });
+  const courseData = await fetchCourses();
+  const courseOptions = courseData.map((course) => ({
+    value: course.courseId,
+    label: course.courseName,
+  }));
+
+  return courseOptions;
 }
