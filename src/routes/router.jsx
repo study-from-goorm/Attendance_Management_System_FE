@@ -17,13 +17,20 @@ import PlayerApplyPage from '../pages/Player/Apply';
 import PlayerResultPage from '../pages/Player/Result';
 import AdminLayout from '../layouts/AdminLayout';
 import AdminMainPage from '../pages/Admin/Main';
-import PlayersInfo from '../pages/Admin/Players/PlayersInfo';
+import PlayersInfo, {
+  loader as playersInfoLoader,
+} from '../pages/Admin/Players/PlayersInfo';
 import AttendanceInfo from '../pages/Admin/Attendance/AttendanceInfo';
 import ApplyInfo from '../pages/Admin/Apply/ApplyInfo';
-// errorElement={<ErrorPage />}
+import NewPlayer from '../pages/Admin/Players/NewPlayer';
+import EditPlayer, {
+  loader as editPlayerLoader,
+  action as editPlayerAction,
+} from '../pages/Admin/Players/EditPlayer';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
+    <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
       <Route element={<PublicRouter />}>
         <Route path="login" element={<LoginPage />} action={loginAction} />
       </Route>
@@ -51,7 +58,24 @@ const router = createBrowserRouter(
         >
           <Route index element={<Navigate to="main" />} />
           <Route path="main" element={<AdminMainPage />} />
-          <Route path="players" element={<PlayersInfo />} />
+          <Route
+            id="player-course"
+            path="players"
+            element={<PlayersInfo />}
+            loader={playersInfoLoader}
+          >
+            <Route
+              path="new"
+              element={<NewPlayer />}
+              loader={playersInfoLoader}
+            />
+            <Route
+              path=":id/edit"
+              element={<EditPlayer />}
+              loader={editPlayerLoader}
+              action={editPlayerAction}
+            />
+          </Route>
           <Route path="attendances" element={<AttendanceInfo />} />
           <Route path="applys" element={<ApplyInfo />} />
         </Route>
