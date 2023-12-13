@@ -16,14 +16,15 @@ import dayjs from "dayjs";
 import { fetchPlayerData, queryClient } from "../../api/requestApi";
 import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
+import { getCookiePlayerId } from "../../auth/cookie";
 // import { getCookiePlayerId } from "../../auth/cookie";
 
 const today = dayjs();
 
 export const loader = () => {
   // const playerId = store.getState().user.playerId;
-  // const playerId = getCookiePlayerId();
-  const playerId = 1;
+  const playerId = getCookiePlayerId();
+  // const playerId = 1;
 
   return queryClient.fetchQuery({
     queryKey: ["player", playerId],
@@ -167,7 +168,9 @@ const PlayerMainPage = () => {
           <PageTitle title={"월별 출석 현황"} />
         </Space>
 
-        <PlayerCalendar />
+        <Card>
+          <PlayerCalendar />
+        </Card>
       </Flex>
     </div>
   );

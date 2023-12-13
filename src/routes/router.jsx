@@ -38,7 +38,7 @@ const router = createBrowserRouter(
         <Route
           path="player"
           element={
-            <RoleRouter allowedRoles={["player", "admin"]}>
+            <RoleRouter allowedRoles={["player"]}>
               <PlayerLayout />
             </RoleRouter>
           }

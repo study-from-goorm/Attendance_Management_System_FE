@@ -5,7 +5,7 @@ import { axiosPublic } from "../../api/axiosInstance";
 import store from "../../store";
 import { setUser } from "../../store/userSlice";
 import { setToken } from "../../store/authSlice";
-import { setCookieToken } from "../../auth/cookie";
+import { setCookiePlayerId, setCookieToken } from "../../auth/cookie";
 
 function LoginPage() {
   return <AuthForm />;
@@ -36,12 +36,24 @@ export async function action({ request }) {
     const token = response?.data?.accessToken;
     const role = mode; // TODO: get from data
 
-    store.dispatch(setUser({ role, username: authData.email }));
-    store.dispatch(setToken(token));
+    if (mode === "player") {
+      const playerId = 1;
+      setCookiePlayerId(playerId);
 
-    setCookieToken(token);
+      store.dispatch(setUser({ role, username: authData.email }));
+      store.dispatch(setToken(token));
 
-    return redirect(`/${role}`);
+      setCookieToken(token);
+
+      return redirect(`/player`);
+    } else {
+      store.dispatch(setUser({ role, username: authData.email }));
+      store.dispatch(setToken(token));
+
+      setCookieToken(token);
+
+      return redirect(`/admin`);
+    }
   } catch (err) {
     if (err.code === "ERR_NETWORK") {
       return "네트워크 오류가 발생하였습니다.";

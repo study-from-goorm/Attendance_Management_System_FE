@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import { removeCookieToken } from "../../auth/cookie";
+import { removeCookiePlayerId, removeCookieToken } from "../../auth/cookie";
 import store from "../../store";
 import { deleteToken } from "../../store/authSlice";
 import { removeUser } from "../../store/userSlice";
@@ -14,5 +14,6 @@ export function action() {
   store.dispatch(deleteToken());
   store.dispatch(removePersonalData());
   removeCookieToken();
+  removeCookiePlayerId();
   return redirect("/login");
 }
