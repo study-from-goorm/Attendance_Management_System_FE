@@ -43,6 +43,19 @@ export async function fetchPlayer({ signal, id }) {
   }
 }
 
+// Player Personal Info
+export async function fetchPlayerData(playerId, year, month) {
+  try {
+    const response = await axiosPrivate.get(
+      `/player/${playerId}/${year}/${month}`,
+    );
+    return response.data;
+  } catch (err) {
+    console.error("플레이어 정보를 불러올 수 없습니다", err);
+    throw err;
+  }
+}
+
 export async function createNewPlayer(playerData) {
   try {
     const response = await axiosPrivate.post("/admin/players", playerData);
@@ -127,15 +140,46 @@ export async function deleteCourse({ id }) {
   }
 }
 
-// Player Personal Info
-export async function fetchPlayerData(playerId, year, month) {
+// Admin > Applications
+export async function fetchApplications() {
   try {
-    const response = await axiosPrivate.get(
-      `/player/${playerId}/${year}/${month}`,
+    const response = await axiosPrivate.get("/admin/applications");
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || "Failed to fetch applications");
+  }
+}
+
+export async function fetchApplication({ signal, id }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/applications/${id}`, {
+      signal,
+    });
+    return response.data;
+  } catch (err) {
+    throw new Error(err.message || "Failed to fetch application");
+  }
+}
+
+export async function updateApplication({ id, applicationData }) {
+  try {
+    const response = await axiosPrivate.patch(
+      `/admin/applications/${id}`,
+      applicationData,
     );
     return response.data;
   } catch (err) {
-    console.error("플레이어 정보를 불러올 수 없습니다", err);
+    throw new Error(err.message || "Failed to update application");
+  }
+}
+
+
+export async function fetchAttendanceData({ course, date }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/attendances/${course}/${date}`);
+    return response.data;
+  } catch (err) {
+    console.error('출석정보를 불러오지 못하였습니다', err);
     throw err;
   }
 }
