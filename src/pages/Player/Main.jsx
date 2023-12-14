@@ -10,20 +10,19 @@ import {
   Typography,
 } from "antd";
 import PlayerCalendar from "../../components/Calendar/PlayerCalendar";
-// import store from "../../store";
+import store from "../../store";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { fetchPlayerData, queryClient } from "../../api/requestApi";
 import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
 import { getCookiePlayerId } from "../../auth/cookie";
-// import { getCookiePlayerId } from "../../auth/cookie";
 
 const today = dayjs();
 
 export const loader = () => {
-  // const playerId = store.getState().user.playerId;
-  const playerId = getCookiePlayerId();
+  const playerId = store.getState().user.playerId;
+  // const playerId = getCookiePlayerId();
   // const playerId = 1;
 
   return queryClient.fetchQuery({

@@ -1,13 +1,13 @@
-import { Link, useSearchParams, Form, useActionData } from 'react-router-dom';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input } from 'antd';
+import { Link, useSearchParams, Form, useActionData } from "react-router-dom";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Input } from "antd";
 
 function AuthForm() {
   const [searchParams] = useSearchParams();
   const errorMsg = useActionData();
 
   let isPlayer = true;
-  if (searchParams.get('mode') === 'admin') {
+  if (searchParams.get("mode") === "admin") {
     isPlayer = false;
   }
 
@@ -16,11 +16,11 @@ function AuthForm() {
       <div className="bg-secondary-color w-full max-w-md p-6 text-white rounded-lg">
         <h2 className="text-center text-2xl font-bold mb-4">출석관리 시스템</h2>
         <div className="flex justify-center mb-6 gap-x-2">
-          {/* toggle effect */}
+          {/* TODO : toggle effect */}
           <Link
             to={`?mode=player`}
             className={`px-4 py-2 rounded-lg ${
-              isPlayer ? 'bg-primary-color' : 'bg-neutral-color opacity-80'
+              isPlayer ? "bg-primary-color" : "bg-neutral-color opacity-80"
             }`}
           >
             플레이어
@@ -28,7 +28,7 @@ function AuthForm() {
           <Link
             to={`?mode=admin`}
             className={`px-4 py-2 rounded-lg ${
-              isPlayer ? 'bg-neutral-color opacity-80' : 'bg-primary-color'
+              isPlayer ? "bg-neutral-color opacity-80" : "bg-primary-color"
             }`}
           >
             관리자
@@ -38,8 +38,8 @@ function AuthForm() {
           <div>
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="email"
-              name="email"
+              placeholder="username"
+              name="username"
               type="text"
             />
           </div>

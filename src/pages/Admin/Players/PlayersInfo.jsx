@@ -67,8 +67,11 @@ function PlayersInfo() {
     navigate(`/admin/players/new${queryString}`);
   };
 
-  const handleDeletePlayer = () => {
-    console.log("handleDeletePlayer!!");
+  const handleDeletePlayer = (playerId, playerName) => {
+    if (confirm(`${playerName}를 제거하시겠습니까?`)) {
+      mutate({ id: playerId });
+    }
+    return false;
   };
 
   let content = null;
@@ -82,9 +85,7 @@ function PlayersInfo() {
   }
 
   if (isError) {
-    content = (
-      <p className="text-red-600 text-center font-semibold">{error.message}</p>
-    );
+    content = <p className="text-red-600 text-center font-semibold">{error}</p>;
   }
 
   if (players) {

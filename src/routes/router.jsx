@@ -27,10 +27,16 @@ import EditPlayer, {
   loader as editPlayerLoader,
   action as editPlayerAction,
 } from "../pages/Admin/Players/EditPlayer";
+import Courses, { loader as coursesLoader } from "../pages/Admin/Courses";
+import NewCourse from "../pages/Admin/Courses/NewCourse";
+import EditCourse, {
+  loader as editCourseLoader,
+  action as editCourseAction,
+} from "../pages/Admin/Courses/EditCourse";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
+    <Route path="/" element={<MainLayout />}>
       <Route element={<PublicRouter />}>
         <Route path="login" element={<LoginPage />} action={loginAction} />
       </Route>
@@ -38,10 +44,11 @@ const router = createBrowserRouter(
         <Route
           path="player"
           element={
-            <RoleRouter allowedRoles={["player"]}>
+            <RoleRouter allowedRoles={["ROLE_PLAYER", "ROLE_ADMIN"]}>
               <PlayerLayout />
             </RoleRouter>
           }
+          errorElement={<ErrorPage />}
         >
           <Route index element={<Navigate to="main" />} />
           <Route
@@ -55,15 +62,15 @@ const router = createBrowserRouter(
         <Route
           path="admin"
           element={
-            <RoleRouter allowedRoles={["admin"]}>
+            <RoleRouter allowedRoles={["ROLE_ADMIN"]}>
               <AdminLayout />
             </RoleRouter>
           }
+          errorElement={<ErrorPage />}
         >
           <Route index element={<Navigate to="main" />} />
           <Route path="main" element={<AdminMainPage />} />
           <Route
-            id="player-course"
             path="players"
             element={<PlayersInfo />}
             loader={playersInfoLoader}
@@ -78,6 +85,19 @@ const router = createBrowserRouter(
               element={<EditPlayer />}
               loader={editPlayerLoader}
               action={editPlayerAction}
+            />
+          </Route>
+          <Route path="courses" element={<Courses />} loader={coursesLoader}>
+            <Route
+              path="new"
+              element={<NewCourse />}
+              loader={playersInfoLoader}
+            />
+            <Route
+              path=":id/edit"
+              element={<EditCourse />}
+              loader={editCourseLoader}
+              action={editCourseAction}
             />
           </Route>
           <Route path="attendances" element={<AttendanceInfo />} />
