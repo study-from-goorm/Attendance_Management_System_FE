@@ -16,7 +16,7 @@ function AuthForm() {
       <div className="bg-secondary-color w-full max-w-md p-6 text-white rounded-lg">
         <h2 className="text-center text-2xl font-bold mb-4">출석관리 시스템</h2>
         <div className="flex justify-center mb-6 gap-x-2">
-          {/* toggle effect */}
+          {/* TODO : toggle effect */}
           <Link
             to={`?mode=player`}
             className={`px-4 py-2 rounded-lg ${
@@ -38,8 +38,8 @@ function AuthForm() {
           <div>
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="email"
-              name="email"
+              placeholder="username"
+              name="username"
               type="text"
             />
           </div>

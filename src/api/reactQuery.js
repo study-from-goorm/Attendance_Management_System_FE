@@ -1,7 +1,18 @@
 import { QueryClient } from '@tanstack/react-query';
-import { axiosPrivate } from './axiosInstance';
+import { axiosPrivate, axiosPublic } from './axiosInstance';
 
 export const queryClient = new QueryClient();
+
+//login
+
+export async function login(mode, loginData) {
+  try {
+    const response = await axiosPublic.post(`/login/${mode}`, loginData);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+}
 
 // Player
 export async function fetchPlayersByCourse({ signal, course }) {
