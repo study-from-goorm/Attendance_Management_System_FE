@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'antd';
 import SelectAttendance from '../components/AdminAttendanceManage/SelectAttendanceBox.jsx';
 
-export const getTableColumns = (handleChange, handleSave) => [
+export const getTableColumns = (handleChange, handleOneAttendance) => [
     {title : '번호', dataIndex : 'key', key : 'key'},
     { title : '이름', dataIndex : 'name', key : 'name' },
     ...Array.from ({ length : 8 }, (_, i) => ({
@@ -18,14 +18,14 @@ export const getTableColumns = (handleChange, handleSave) => [
         ),
     })),
     {
-        title : '저장',
-        key : 'save',
+        title : '출석',
+        key : 'attendance',
         render : (_, record, index) => (
             <Button
-                onClick={() => handleSave (record.key)}
+                onClick={() => handleOneAttendance (record.key)}
                 type="primary"
             >
-                저장
+                출석
             </Button>
         ),
     },

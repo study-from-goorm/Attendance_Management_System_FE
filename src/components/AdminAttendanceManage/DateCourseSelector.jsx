@@ -12,6 +12,8 @@ const DateCourseSelector = ({
                                 handleCourseChange,
                                 handleAllAttendance,
                                 handleSubmit,
+                                handleReset,
+                                handleSearch
                             }) => {
     const {data, isLoading, error} = useQuery({
         queryKey: ['courses'],
@@ -53,7 +55,7 @@ const DateCourseSelector = ({
                 <CustomDatePicker value={currentDate} onDateChange={handleDateChange} className="mr-2" />
                 <Select
                     onChange={handleSelectChange}
-                    defaultValue={currentCourse.courseName}
+                    defaultValue={currentCourse.courseName ? currentCourse.courseName : "과정을 선택하세요"}
                     className="flex-1"
                 >
                     {data.map((course) => (
@@ -62,15 +64,21 @@ const DateCourseSelector = ({
                         </Select.Option>
                     ))}
                 </Select>
+                <Button type="primary" onClick={handleSearch} className="mr-2">
+                    검색
+                </Button>
             </div>
 
             {/* 오른쪽 요소: 버튼 그룹 */}
             <div>
+                <Button type="primary" onClick={handleReset} className="mr-2">
+                    초기화
+                </Button>
                 <Button type="primary" onClick={handleAllAttendance} className="mr-2">
                     모두 출석
                 </Button>
                 <Button type="primary" onClick={handleSubmit}>
-                    변경 사항 제출
+                    변경 사항 저장
                 </Button>
             </div>
         </div>
