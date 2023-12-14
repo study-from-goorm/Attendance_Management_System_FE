@@ -172,3 +172,14 @@ export async function updateApplication({ id, applicationData }) {
     throw new Error(err.message || "Failed to update application");
   }
 }
+
+
+export async function fetchAttendanceData({ course, date }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/attendances/${course}/${date}`);
+    return response.data;
+  } catch (err) {
+    console.error('출석정보를 불러오지 못하였습니다', err);
+    throw err;
+  }
+}
