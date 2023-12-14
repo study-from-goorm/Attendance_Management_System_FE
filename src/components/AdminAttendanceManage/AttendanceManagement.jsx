@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import DateCourseSelector from "./DateCourseSelector.jsx";
 import {axiosPrivate} from "../../api/axiosInstance.js";
 import {Table, Spin} from 'antd'
@@ -92,7 +92,8 @@ const AttendanceTable = () => {
 
         const reshapeDataCallback = useCallback ((data) => {
             const reshapedData = reshapeData (data, currentDate, currentCourse.courseName);
-            setChangedData (reshapedData);
+            setChangedData ({
+                [`${currentDate} - ${currentCourse.courseId}`] : reshapedData });
         }, [ currentDate, currentCourse.courseName ]);
 
         //변경 사항 제출
@@ -122,7 +123,7 @@ const AttendanceTable = () => {
 
             try {
                 await reshapeDataCallback([savedData]);
-                await axiosPrivate.post(`/admin/attendances/${currentCourse.courseId}/${currentDate}`, changedData);
+                await axiosPrivate.post(`/admin/attendances/${currentCourse.courseId}/${currentDate}`,  changedData);
                 alert('변경 사항이 성공적으로 제출되었습니다.');
                 setChangedData({});
             } catch (error) {
@@ -132,7 +133,7 @@ const AttendanceTable = () => {
         }, [ changedData, dataSource, reshapeDataCallback, currentCourse.courseId, currentDate ]);
 
 
-        const columns = getTableColumns (handleChange, handleSave, currentCourse.courseName);
+        const columns = useMemo(() => getTableColumns (handleChange, handleSave, currentCourse.courseName));
 
 
         useEffect (() => {
