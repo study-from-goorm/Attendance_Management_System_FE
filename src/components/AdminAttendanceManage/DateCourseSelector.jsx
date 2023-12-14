@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import CustomDatePicker from './CustomDatePicker';
-import {Button, Select} from 'antd';
+import {Button, Select, Spin} from 'antd';
 import {useQuery} from '@tanstack/react-query';
-import {fetchCourses} from "../../api/reactQuery.js";
+import {fetchCourses} from '../../api/reactQuery';
+import {LoadingOutlined} from "@ant-design/icons";
 
 const DateCourseSelector = ({
                                 currentDate,
@@ -23,14 +24,32 @@ const DateCourseSelector = ({
         handleCourseChange(course);
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error while fetching courses</div>;
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500">
+                    <Spin
+                        indicator={
+                            <LoadingOutlined
+                                style={{
+                                    fontSize : 24,
+                                }}
+                                spin
+                            />
+                        }
+                    />;
+                </div>
+            </div>
+        )
+    }
+    if (error) return <div>Error : 회차 정보를 불러오지 못했습니다</div>;
+
 
 
     return (
-        <div className="sticky top-12 bg-ivory p-4 rounded-lg shadow-md z-10 flex justify-between items-center">
+        <div className="sticky top-12 bg-gray-200 p-4 rounded-lg shadow-md z-10 flex flex-col lg:flex-row justify-between items-center">
             {/* 왼쪽 요소: 날짜 선택기와 코스 선택 */}
-            <div className="flex items-center">
+            <div className="flex flex-col lg:flex-row items-center mb-4 lg:mb-0">
                 <CustomDatePicker value={currentDate} onDateChange={handleDateChange} className="mr-2" />
                 <Select
                     onChange={handleSelectChange}
