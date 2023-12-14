@@ -21,7 +21,6 @@ import PlayersInfo, {
   loader as playersInfoLoader,
 } from "../pages/Admin/Players/PlayersInfo";
 import AttendanceInfo from "../pages/Admin/Attendance/AttendanceInfo";
-import ApplyInfo from "../pages/Admin/Apply/ApplyInfo";
 import NewPlayer from "../pages/Admin/Players/NewPlayer";
 import EditPlayer, {
   loader as editPlayerLoader,
@@ -33,6 +32,11 @@ import EditCourse, {
   loader as editCourseLoader,
   action as editCourseAction,
 } from "../pages/Admin/Courses/EditCourse";
+import Applications from "../pages/Admin/Applications/index";
+import Application, {
+  loader as applicationLoader,
+  action as applicationAction,
+} from "../pages/Admin/Applications/Application";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -101,7 +105,14 @@ const router = createBrowserRouter(
             />
           </Route>
           <Route path="attendances" element={<AttendanceInfo />} />
-          <Route path="applys" element={<ApplyInfo />} />
+          <Route path="applications" element={<Applications />}>
+            <Route
+              path=":applicationId"
+              element={<Application />}
+              loader={applicationLoader}
+              action={applicationAction}
+            />
+          </Route>
         </Route>
         <Route path="logout" action={logoutAction} />
       </Route>

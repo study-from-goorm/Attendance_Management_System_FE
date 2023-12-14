@@ -83,13 +83,13 @@ const Sidebar = () => {
               </li>
               <li>
                 <NavLink
-                  to="/admin/applys"
+                  to="/admin/applications"
                   className={({ isActive }) =>
                     `${iconClass} ${isActive ? "bg-gray-200" : ""}`
                   }
                 >
                   <FaClipboardCheck className="text-xl" />
-                  <span className="font-medium ml-2">신청 관리</span>
+                  <span className="font-medium ml-2">신청서 관리</span>
                 </NavLink>
               </li>
             </>
