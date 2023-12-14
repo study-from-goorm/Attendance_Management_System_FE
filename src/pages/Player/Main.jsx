@@ -17,13 +17,13 @@ import { fetchPlayerData, queryClient } from "../../api/requestApi";
 import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
 import { getCookiePlayerId } from "../../auth/cookie";
+import { waitForRehydration } from "../../utils";
 
 const today = dayjs();
 
-export const loader = () => {
+export const loader = async () => {
+  await waitForRehydration();
   const playerId = store.getState().user.playerId;
-  // const playerId = getCookiePlayerId();
-  // const playerId = 1;
 
   return queryClient.fetchQuery({
     queryKey: ["player", playerId],

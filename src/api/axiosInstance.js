@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store";
+import { waitForRehydration } from "../utils";
 
 
 // const BASE_URL = 'http://211.215.180.216:9999';
@@ -19,19 +20,18 @@ export const axiosPrivate = axios.create({
   },
 });
 
-// axios 인터셉터 설정
 axiosPrivate.interceptors.request.use(
-  (config) => {
-    const token = store.getState().auth.accessToken;
+  async (config) => {
+    // Rehydration 완료까지 기다림
+    await waitForRehydration();
 
+    const token = store.getState().auth.accessToken;
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["accessToken"] = `${token}`;
     }
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
-
-// 211.215.180.216:9999/admin/courses
