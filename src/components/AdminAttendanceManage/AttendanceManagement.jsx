@@ -3,7 +3,7 @@ import DateCourseSelector from "./DateCourseSelector.jsx";
 import {axiosPrivate} from "../../api/axiosInstance.js";
 import {Table, Spin} from 'antd'
 import {useQuery} from "@tanstack/react-query";
-import {fetchAttendanceData} from "../../api/reactQuery.js";
+import {fetchAttendanceData} from "../../api/requestApi.js";
 import {transformDataForTable} from "../../utils/transformDataForTable.js";
 import {getTableColumns} from "../../utils/getTableColumns.jsx";
 import {reshapeData} from "../../utils/reshapeData.js";
@@ -107,22 +107,29 @@ const AttendanceTable = () => {
             }
         };
 
-//저장 버튼 클릭 시
-        const handleSave = useCallback (async (studentIndex) => {
-            const studentChangedData = changedData.filter (data => data.studentIndex === studentIndex);
+        //저장 버튼 클릭 시
+        const handleSave = useCallback(async (studentIndex) => {
 
-            if (studentChangedData.length === 0) {
-                alert ('변경된 데이터가 없습니다.');
+            const savedData = dataSource[studentIndex];
+            console.log("=>(AttendanceManagement.jsx:119) dataSource", dataSource);
+            console.log("=>(AttendanceManagement.jsx:119) savedData", savedData);
+
+            // savedData가 undefined인 경우 함수를 종료
+            if (!savedData) {
+                alert('저장할 데이터가 없습니다.');
                 return;
             }
 
             try {
-                await axiosPrivate.post ('/api/updateAttendance', studentChangedData);
-                alert ('변경 사항이 성공적으로 저장되었습니다.');
+                await reshapeDataCallback([savedData]);
+                await axiosPrivate.post(`/admin/attendances/${currentCourse.courseId}/${currentDate}`, changedData);
+                alert('변경 사항이 성공적으로 제출되었습니다.');
+                setChangedData({});
             } catch (error) {
-                console.error ('Error submitting data:', error);
+                alert('변경 사항 제출에 실패했습니다.');
+                console.error('Error submitting data:', error);
             }
-        }, [ changedData ]);
+        }, [ changedData, dataSource, reshapeDataCallback, currentCourse.courseId, currentDate ]);
 
 
         const columns = getTableColumns (handleChange, handleSave, currentCourse.courseName);
@@ -171,11 +178,11 @@ const AttendanceTable = () => {
                     handleSubmit={handleSubmit}
                 />
                 <Table columns={columns} dataSource={dataSource} sticky={true} responsive={true}
-                    pagination={{
-                        defaultPageSize: 20,
-                        showSizeChanger: true,
-                        pageSizeOptions: ['10', '20', '30', '50', '60', '70', '100'],
-                    }}
+                       pagination={{
+                           defaultPageSize : 20,
+                           showSizeChanger : true,
+                           pageSizeOptions : [ '10', '20', '30', '50', '60', '70', '100' ],
+                       }}
                 />
             </div>
         );

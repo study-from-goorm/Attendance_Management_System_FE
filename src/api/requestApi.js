@@ -139,3 +139,14 @@ export async function fetchPlayerData(playerId, year, month) {
     throw err;
   }
 }
+
+
+export async function fetchAttendanceData({ course, date }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/attendances/${course}/${date}`);
+    return response.data;
+  } catch (err) {
+    console.error('출석정보를 불러오지 못하였습니다', err);
+    throw err;
+  }
+}

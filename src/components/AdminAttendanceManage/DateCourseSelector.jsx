@@ -2,7 +2,7 @@ import React from 'react';
 import CustomDatePicker from './CustomDatePicker';
 import {Button, Select, Spin} from 'antd';
 import {useQuery} from '@tanstack/react-query';
-import {fetchCourses} from '../../api/reactQuery';
+import {fetchCourses} from '../../api/requestApi.js';
 import {LoadingOutlined} from "@ant-design/icons";
 
 const DateCourseSelector = ({
@@ -47,7 +47,7 @@ const DateCourseSelector = ({
 
 
     return (
-        <div className="sticky top-12 bg-gray-200 p-4 rounded-lg shadow-md z-10 flex flex-col lg:flex-row justify-between items-center">
+        <div className="bg-background-color sticky top-12 p-4 rounded-lg shadow-md z-10 flex flex-col lg:flex-row justify-between items-center">
             {/* 왼쪽 요소: 날짜 선택기와 코스 선택 */}
             <div className="flex flex-col lg:flex-row items-center mb-4 lg:mb-0">
                 <CustomDatePicker value={currentDate} onDateChange={handleDateChange} className="mr-2" />
