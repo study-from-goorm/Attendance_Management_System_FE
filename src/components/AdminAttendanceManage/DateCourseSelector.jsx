@@ -11,7 +11,6 @@ const DateCourseSelector = ({
                                 handleCourseChange,
                                 handleAllAttendance,
                                 handleSubmit,
-                                handleSearch,
                             }) => {
     const {data, isLoading, error} = useQuery({
         queryKey: ['courses'],
@@ -29,29 +28,34 @@ const DateCourseSelector = ({
 
 
     return (
-        <div className="sticky top-[50px] z-10 mb-4">
-            <CustomDatePicker value={currentDate} onDateChange={handleDateChange}/>
-            <Select
-                onChange={handleSelectChange}
-                value={currentCourse}
-                className="mb-4"
-            >
-                {data.map((course) => (
-                    <Select.Option key={course.courseId} value={course.courseId}>
-                        {course.courseName}
-                    </Select.Option>
-                ))}
-            </Select>
-            <Button type="primary" onClick={handleSearch}>
-                검색
-            </Button>
-            <Button type="primary" onClick={handleAllAttendance}>
-                모두 출석
-            </Button>
-            <Button type="primary" onClick={handleSubmit}>
-                변경 사항 제출
-            </Button>
+        <div className="sticky top-12 bg-ivory p-4 rounded-lg shadow-md z-10">
+            {/* 날짜 및 코스 선택 그룹 */}
+            <div className="flex justify-between mb-4">
+                <CustomDatePicker value={currentDate} onDateChange={handleDateChange} className="mr-2" />
+                <Select
+                    onChange={handleSelectChange}
+                    defaultValue={currentCourse.courseName}
+                    className="flex-1"
+                >
+                    {data.map((course) => (
+                        <Select.Option key={course.courseId} value={course.courseId}>
+                            {course.courseName}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </div>
+
+            {/* 버튼 그룹 */}
+            <div className="flex justify-between">
+                <Button type="primary" onClick={handleAllAttendance} className="mr-2">
+                    모두 출석
+                </Button>
+                <Button type="primary" onClick={handleSubmit}>
+                    변경 사항 제출
+                </Button>
+            </div>
         </div>
+
     );
 };
 
