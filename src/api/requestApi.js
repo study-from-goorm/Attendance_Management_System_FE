@@ -57,7 +57,7 @@ export async function updatePlayer({ id, playerData }) {
   try {
     const response = await axiosPrivate.patch(
       `/admin/player/${id}`,
-      playerData
+      playerData,
     );
     return response.data;
   } catch (err) {
@@ -110,7 +110,7 @@ export async function updateCourse({ id, courseData }) {
   try {
     const response = await axiosPrivate.patch(
       `/admin/course/${id}`,
-      courseData
+      courseData,
     );
     return response.data;
   } catch (err) {
@@ -131,7 +131,7 @@ export async function deleteCourse({ id }) {
 export async function fetchPlayerData(playerId, year, month) {
   try {
     const response = await axiosPrivate.get(
-      `/player/${playerId}/${year}/${month}`
+      `/player/${playerId}/${year}/${month}`,
     );
     return response.data;
   } catch (err) {
