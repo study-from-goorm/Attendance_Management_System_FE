@@ -35,6 +35,30 @@
   color: white !important;
 }
 
+.ant-btn.ant-btn-dangerous {
+  color: black !important;
+  background-color: #ff4d4f !important;
+}
+
+.ant-btn.ant-btn-dangerous:hover {
+  color: black !important;
+  background-color: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+  opacity: 0.7 !important;
+}
+
+.ant-btn.success {
+  color: black !important;
+  background-color: #52c41a !important;
+}
+
+.ant-btn.success:hover {
+  color: black !important;
+  background-color: #52c41a !important;
+  border-color: #52c41a !important;
+  opacity: 0.7 !important;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

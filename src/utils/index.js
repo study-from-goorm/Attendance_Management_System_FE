@@ -12,3 +12,16 @@ export const waitForRehydration = () => {
     checkRehydration();
   });
 };
+
+export const statusToColor = (status) => {
+  switch (status) {
+    case "승인":
+      return "success";
+    case "대기":
+      return "processing";
+    case "거절":
+      return "error";
+    default:
+      return "default";
+  }
+};
