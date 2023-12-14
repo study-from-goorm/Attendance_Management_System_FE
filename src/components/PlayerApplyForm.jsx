@@ -1,5 +1,4 @@
-import { Button, DatePicker, Form, Input, Radio, Space } from "antd";
-import dayjs from "dayjs";
+import { Button, DatePicker, Flex, Form, Input, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 
 // Submit 버튼 활성화 <- 모든 validation 조건 충족시
@@ -30,14 +29,17 @@ const SubmitButton = ({ form }) => {
   );
 };
 
-// Form 제출시
-const onFinish = (values) => {
-  console.log("submit", values);
-  console.log("applicationdate, ", dayjs(values.applicationDate, "YYYY-MM-DD"));
-};
-
-const PlayerApplyForm = () => {
+const PlayerApplyForm = ({ onSubmit }) => {
   const [form] = Form.useForm();
+
+  // Form 제출시
+  const onFinish = (values) => {
+    onSubmit({
+      ...values,
+      applicationDate: values.applicationDate.format("YYYY-MM-DD"),
+    });
+  };
+
   return (
     <Form form={form} onFinish={onFinish}>
       <Form.Item
@@ -65,8 +67,8 @@ const PlayerApplyForm = () => {
           <Radio value="외출">외출</Radio>
           <Radio value="공결">공결</Radio>
           <Radio value="휴가">휴가</Radio>
-          <Radio value="출석정정">출석 정정</Radio>
-          <Radio value="발급">확인서/출석부 발급</Radio>
+          {/* <Radio value="출석정정">출석 정정</Radio>
+          <Radio value="발급">확인서/출석부 발급</Radio> */}
         </Radio.Group>
       </Form.Item>
       <Form.Item
@@ -85,11 +87,13 @@ const PlayerApplyForm = () => {
       >
         <Input.TextArea rows={4} placeholder="사유를 입력하세요..." />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 18 }}>
-        <Space>
-          <SubmitButton form={form} />
-          <Button htmlType="reset">Reset</Button>
-        </Space>
+      <Form.Item>
+        <Flex justify="center">
+          <Space>
+            <SubmitButton form={form} />
+            <Button htmlType="reset">Reset</Button>
+          </Space>
+        </Flex>
       </Form.Item>
     </Form>
   );
