@@ -59,9 +59,20 @@ export async function updatePlayer({ id, playerData }) {
 export async function fetchCourses() {
   try {
     const response = await axiosPrivate.get('/admin/courses');
+    console.log("=>(reactQuery.js:63) response.data", response.data);
     return response.data;
   } catch (err) {
     console.error('과정정보를 불러오지 못하였습니다', err);
+    throw err;
+  }
+}
+
+export async function fetchAttendanceData({ course, date }) {
+  try {
+    const response = await axiosPrivate.get(`/admin/attendances/${course}/${date}`);
+    return response.data;
+  } catch (err) {
+    console.error('출석정보를 불러오지 못하였습니다', err);
     throw err;
   }
 }
