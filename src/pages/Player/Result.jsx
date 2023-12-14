@@ -1,6 +1,6 @@
 import { Flex, Table, Tag } from "antd";
 import PageTitle from "../../components/PageTitle";
-import { waitForRehydration } from "../../utils";
+import { statusToColor, waitForRehydration } from "../../utils";
 import store from "../../store";
 import { fetchApplicationResult, queryClient } from "../../api/requestApi";
 import dayjs from "dayjs";
@@ -30,6 +30,7 @@ function PlayerResultPage() {
     {
       title: "신청 구분",
       dataIndex: "applicationType",
+      render: (type) => <Tag>{type}</Tag>,
     },
     {
       title: "신청 사유",
@@ -38,7 +39,7 @@ function PlayerResultPage() {
     {
       title: "상태",
       dataIndex: "applicationStatus",
-      render: (status) => <Tag>{status}</Tag>,
+      render: (status) => <Tag color={statusToColor(status)}>{status}</Tag>,
     },
   ];
 
