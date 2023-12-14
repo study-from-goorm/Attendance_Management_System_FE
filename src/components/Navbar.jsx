@@ -1,11 +1,11 @@
-import { getCurrentUser } from '../store/userSlice';
-import { useSelector } from 'react-redux';
-import { Tooltip } from 'antd';
+import { getCurrentUser } from "../store/userSlice";
+import { useSelector } from "react-redux";
+import { Tooltip } from "antd";
 
 const Navbar = () => {
   const { username, role } = useSelector(getCurrentUser);
-  let roleKor = '플레이어';
-  if (role === 'admin') roleKor = '관리자';
+  let roleKor = "플레이어";
+  if (role === "ROLE_ADMIN") roleKor = "관리자";
 
   return (
     <div className="navbar bg-white border-b-2 ">
