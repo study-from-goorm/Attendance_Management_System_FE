@@ -27,10 +27,7 @@ export const loader = async () => {
 
   return queryClient.fetchQuery({
     queryKey: ["player", playerId],
-    queryFn: () =>
-      fetchPlayerData(playerId, today.year(), today.month()).then((res) => {
-        return res;
-      }),
+    queryFn: () => fetchPlayerData(playerId, today.year(), today.month()),
   });
 };
 
