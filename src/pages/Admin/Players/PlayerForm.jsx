@@ -1,12 +1,12 @@
-import { Select, Form, Input, Button, Space } from 'antd';
-import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Select, Form, Input, Button, Space } from "antd";
+import { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [passwordValue, setPasswordValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState("");
 
   const onFinish = (values) => {
     onSubmit(
@@ -22,7 +22,7 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
     );
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   const handleCourseChange = (value, option) => {
@@ -30,8 +30,8 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
   };
 
   const handleNavigate = () => {
-    const currentCourse = searchParams.get('course');
-    const queryString = currentCourse ? `?course=${currentCourse}` : '';
+    const currentCourse = searchParams.get("course");
+    const queryString = currentCourse ? `?course=${currentCourse}` : "";
 
     navigate(`/admin/players${queryString}`);
   };
@@ -70,7 +70,7 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
           rules={[
             {
               required: true,
-              message: '과정을 반드시 선택해 주세요.',
+              message: "과정을 반드시 선택해 주세요.",
             },
           ]}
         >
@@ -94,7 +94,7 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
           rules={[
             {
               required: true,
-              message: '플레이어 이름을 입력해 주세요.',
+              message: "플레이어 이름을 입력해 주세요.",
             },
           ]}
         >
@@ -112,7 +112,7 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
           rules={[
             {
               required: true,
-              message: '플레이어 이메일을 입력해 주세요.',
+              message: "플레이어 이메일을 입력해 주세요.",
             },
           ]}
         >
@@ -128,7 +128,7 @@ function PlayerForm({ inputData, onSubmit, courses, searchedCourse }) {
             : [
                 {
                   required: true,
-                  message: '플레이어 비밀번호를 설정해 주세요.',
+                  message: "플레이어 비밀번호를 설정해 주세요.",
                 },
               ]
         }

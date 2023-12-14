@@ -44,7 +44,7 @@ const router = createBrowserRouter(
         <Route
           path="player"
           element={
-            <RoleRouter allowedRoles={["ROLE_PLAYER", "ROLE_ADMIN"]}>
+            <RoleRouter allowedRoles={["ROLE_PLAYER"]}>
               <PlayerLayout />
             </RoleRouter>
           }
@@ -105,8 +105,8 @@ const router = createBrowserRouter(
         </Route>
         <Route path="logout" action={logoutAction} />
       </Route>
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 export default router;

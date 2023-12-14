@@ -36,9 +36,8 @@ export async function action({ request }) {
       return responseData.message;
     }
   } else {
-    const accessToken = responseData.accessToken;
-    const role = responseData.role;
-    store.dispatch(setUser({ role, username: authData.username }));
+    const { accessToken, role, playerId } = responseData;
+    store.dispatch(setUser({ playerId, username: authData.username, role }));
     store.dispatch(setToken(accessToken));
 
     setCookieToken(accessToken);
