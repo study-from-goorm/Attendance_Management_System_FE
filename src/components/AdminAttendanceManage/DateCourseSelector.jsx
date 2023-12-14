@@ -28,9 +28,9 @@ const DateCourseSelector = ({
 
 
     return (
-        <div className="sticky top-12 bg-ivory p-4 rounded-lg shadow-md z-10">
-            {/* 날짜 및 코스 선택 그룹 */}
-            <div className="flex justify-between mb-4">
+        <div className="sticky top-12 bg-ivory p-4 rounded-lg shadow-md z-10 flex justify-between items-center">
+            {/* 왼쪽 요소: 날짜 선택기와 코스 선택 */}
+            <div className="flex items-center">
                 <CustomDatePicker value={currentDate} onDateChange={handleDateChange} className="mr-2" />
                 <Select
                     onChange={handleSelectChange}
@@ -45,8 +45,8 @@ const DateCourseSelector = ({
                 </Select>
             </div>
 
-            {/* 버튼 그룹 */}
-            <div className="flex justify-between">
+            {/* 오른쪽 요소: 버튼 그룹 */}
+            <div>
                 <Button type="primary" onClick={handleAllAttendance} className="mr-2">
                     모두 출석
                 </Button>
@@ -55,7 +55,6 @@ const DateCourseSelector = ({
                 </Button>
             </div>
         </div>
-
     );
 };
 
