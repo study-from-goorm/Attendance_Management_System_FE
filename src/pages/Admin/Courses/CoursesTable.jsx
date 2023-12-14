@@ -1,13 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteCourse, fetchCourses } from '../../../api/reactQuery';
-import { Card, Table, Space, Button } from 'antd';
-import LoadingIndicator from '../../../components/UI/LoadingIndicator';
-import { Link } from 'react-router-dom';
-import { queryClient } from '../../../api/reactQuery';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteCourse, fetchCourses } from "../../../api/requestApi";
+import { Card, Table, Space, Button } from "antd";
+import LoadingIndicator from "../../../components/UI/LoadingIndicator";
+import { Link } from "react-router-dom";
+import { queryClient } from "../../../api/requestApi";
 
 function CoursesTable() {
   const { data: courses, isLoading } = useQuery({
-    queryKey: ['courses'],
+    queryKey: ["courses"],
     queryFn: fetchCourses,
     select: (courses) => {
       return courses.map((course) => ({
@@ -20,7 +20,7 @@ function CoursesTable() {
   const { mutate } = useMutation({
     mutationFn: deleteCourse,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
     },
   });
 
@@ -33,12 +33,12 @@ function CoursesTable() {
 
   const columns = [
     {
-      title: '과정',
-      dataIndex: 'courseName',
-      defaultSortOrder: 'ascend',
+      title: "과정",
+      dataIndex: "courseName",
+      defaultSortOrder: "ascend",
       sorter: (a, b) => a.courseName.localeCompare(b.courseName),
 
-      sortDirections: ['descend', 'ascend'],
+      sortDirections: ["descend", "ascend"],
     },
     {
       render: (record) => (

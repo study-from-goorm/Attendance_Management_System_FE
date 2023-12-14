@@ -28,13 +28,8 @@ function PlayersInfoTable({ players, queryString, handleDeletePlayer }) {
           >
             수정하기
           </Link>
-          <Button
-            type="text"
-            onClick={() => handleDeletePlayer(record.key, record.playerName)}
-            className="text-xs"
-          >
-            삭제하기
-          </Button>
+          <Button>삭제하기</Button>
+          <a className="text-xs">삭제하기</a>
         </Space>
       ),
     },

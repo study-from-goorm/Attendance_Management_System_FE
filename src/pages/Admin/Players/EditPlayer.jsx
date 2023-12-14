@@ -1,24 +1,24 @@
-import { Modal } from 'antd';
-import PageTitle from '../../../components/PageTitle';
+import { Modal } from "antd";
+import PageTitle from "../../../components/PageTitle";
 import {
   useNavigate,
   useSearchParams,
   useLoaderData,
   useSubmit,
   redirect,
-} from 'react-router-dom';
+} from "react-router-dom";
 import {
   fetchPlayer,
   queryClient,
   updatePlayer,
-} from '../../../api/reactQuery';
-import PlayerForm from './PlayerForm';
+} from "../../../api/requestApi";
+import PlayerForm from "./PlayerForm";
 
 function EditPlayer() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const searchedCourse = searchParams.get('course');
-  const queryString = searchedCourse ? `?course=${searchedCourse}` : '';
+  const searchedCourse = searchParams.get("course");
+  const queryString = searchedCourse ? `?course=${searchedCourse}` : "";
   const player = useLoaderData();
   const submit = useSubmit();
 
@@ -27,7 +27,7 @@ function EditPlayer() {
   };
 
   const handleSubmit = (formData) => {
-    submit(formData, { method: 'PATCH' });
+    submit(formData, { method: "PATCH" });
   };
 
   return (
@@ -42,7 +42,7 @@ export default EditPlayer;
 
 export async function loader({ params }) {
   return queryClient.fetchQuery({
-    queryKey: ['players', { playerId: params.id }],
+    queryKey: ["players", { playerId: params.id }],
     queryFn: ({ signal }) => fetchPlayer({ signal, id: params.id }),
   });
 }
@@ -53,9 +53,9 @@ export async function action({ request, params }) {
 
   const url = new URL(request.url);
   const queryParams = url.searchParams;
-  const courseId = queryParams.get('course');
+  const courseId = queryParams.get("course");
 
-  await updatePlayer({ id: params.id, playerData: updatedData });
-  await queryClient.invalidateQueries(['players']);
-  return redirect(`/admin/players${courseId ? `?course=${courseId}` : ''}`);
+  // await updatePlayer({ id: params.id, playerData: updatedData });
+  // await queryClient.invalidateQueries(['playuers']);
+  return redirect(`/admin/players${courseId ? `?course=${courseId}` : ""}`);
 }

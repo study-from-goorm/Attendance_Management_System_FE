@@ -1,9 +1,9 @@
-import { useNavigate, useLoaderData } from 'react-router-dom';
-import { Modal } from 'antd';
-import PageTitle from '../../../components/PageTitle';
-import { useMutation } from '@tanstack/react-query';
-import CourseForm from './CourseForm';
-import { createNewCourse, queryClient } from '../../../api/reactQuery';
+import { useNavigate, useLoaderData } from "react-router-dom";
+import { Modal } from "antd";
+import PageTitle from "../../../components/PageTitle";
+import { useMutation } from "@tanstack/react-query";
+import CourseForm from "./CourseForm";
+import { createNewCourse, queryClient } from "../../../api/requestApi";
 
 function NewPlayer() {
   const navigate = useNavigate();
@@ -11,17 +11,17 @@ function NewPlayer() {
   const { mutate } = useMutation({
     mutationFn: createNewCourse,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses'] });
-      navigate('/admin/courses');
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+      navigate("/admin/courses");
     },
   });
 
   const handleCancel = () => {
-    navigate('/admin/courses');
+    navigate("/admin/courses");
   };
 
   const handleSubmit = (formData) => {
-    console.log('formData', formData);
+    console.log("formData", formData);
     mutate(formData);
   };
   return (

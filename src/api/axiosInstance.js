@@ -1,20 +1,19 @@
-import axios from 'axios';
-import store from '../store';
+import axios from "axios";
+import store from "../store";
 
-// const BASE_URL = 'http://211.215.180.216:9999';
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = "http://localhost:8080";
 
 export const axiosPublic = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -24,11 +23,13 @@ axiosPrivate.interceptors.request.use(
     const token = store.getState().auth.accessToken;
 
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
+
+// 211.215.180.216:9999/admin/courses

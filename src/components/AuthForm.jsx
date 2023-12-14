@@ -1,13 +1,13 @@
-import { Link, useSearchParams, Form, useActionData } from 'react-router-dom';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input } from 'antd';
+import { Link, useSearchParams, Form, useActionData } from "react-router-dom";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Input } from "antd";
 
 function AuthForm() {
   const [searchParams] = useSearchParams();
   const errorMsg = useActionData();
 
   let isPlayer = true;
-  if (searchParams.get('mode') === 'admin') {
+  if (searchParams.get("mode") === "admin") {
     isPlayer = false;
   }
 
@@ -20,7 +20,7 @@ function AuthForm() {
           <Link
             to={`?mode=player`}
             className={`px-4 py-2 rounded-lg ${
-              isPlayer ? 'bg-primary-color' : 'bg-neutral-color opacity-80'
+              isPlayer ? "bg-primary-color" : "bg-neutral-color opacity-80"
             }`}
           >
             플레이어
@@ -28,7 +28,7 @@ function AuthForm() {
           <Link
             to={`?mode=admin`}
             className={`px-4 py-2 rounded-lg ${
-              isPlayer ? 'bg-neutral-color opacity-80' : 'bg-primary-color'
+              isPlayer ? "bg-neutral-color opacity-80" : "bg-primary-color"
             }`}
           >
             관리자

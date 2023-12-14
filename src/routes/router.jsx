@@ -3,36 +3,36 @@ import {
   createRoutesFromElements,
   Route,
   Navigate,
-} from 'react-router-dom';
-import MainLayout from '../layouts/MainLayout';
-import ErrorPage from '../pages/Error';
-import LoginPage, { action as loginAction } from '../pages/Auth/Login';
-import { action as logoutAction } from '../pages/Auth/Logout';
-import PublicRouter from './PublicRouter';
-import PrivateRouter from './PrivateRouter';
-import RoleRouter from './RoleRouter';
-import PlayerLayout from '../layouts/PlayerLayout';
-import PlayerMainPage from '../pages/Player/Main';
-import PlayerApplyPage from '../pages/Player/Apply';
-import PlayerResultPage from '../pages/Player/Result';
-import AdminLayout from '../layouts/AdminLayout';
-import AdminMainPage from '../pages/Admin/Main';
+} from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
+import ErrorPage from "../pages/Error";
+import LoginPage, { action as loginAction } from "../pages/Auth/Login";
+import { action as logoutAction } from "../pages/Auth/Logout";
+import PublicRouter from "./PublicRouter";
+import PrivateRouter from "./PrivateRouter";
+import RoleRouter from "./RoleRouter";
+import PlayerLayout from "../layouts/PlayerLayout";
+import PlayerMainPage, { loader as playerLoader } from "../pages/Player/Main";
+import PlayerApplyPage from "../pages/Player/Apply";
+import PlayerResultPage from "../pages/Player/Result";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminMainPage from "../pages/Admin/Main";
 import PlayersInfo, {
   loader as playersInfoLoader,
-} from '../pages/Admin/Players/PlayersInfo';
-import AttendanceInfo from '../pages/Admin/Attendance/AttendanceInfo';
-import ApplyInfo from '../pages/Admin/Apply/ApplyInfo';
-import NewPlayer from '../pages/Admin/Players/NewPlayer';
+} from "../pages/Admin/Players/PlayersInfo";
+import AttendanceInfo from "../pages/Admin/Attendance/AttendanceInfo";
+import ApplyInfo from "../pages/Admin/Apply/ApplyInfo";
+import NewPlayer from "../pages/Admin/Players/NewPlayer";
 import EditPlayer, {
   loader as editPlayerLoader,
   action as editPlayerAction,
-} from '../pages/Admin/Players/EditPlayer';
-import Courses, { loader as coursesLoader } from '../pages/Admin/Courses';
-import NewCourse from '../pages/Admin/Courses/NewCourse';
+} from "../pages/Admin/Players/EditPlayer";
+import Courses, { loader as coursesLoader } from "../pages/Admin/Courses";
+import NewCourse from "../pages/Admin/Courses/NewCourse";
 import EditCourse, {
   loader as editCourseLoader,
   action as editCourseAction,
-} from '../pages/Admin/Courses/EditCourse';
+} from "../pages/Admin/Courses/EditCourse";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,21 +44,25 @@ const router = createBrowserRouter(
         <Route
           path="player"
           element={
-            <RoleRouter allowedRoles={['ROLE_PLAYER', 'ROLE_ADMIN']}>
+            <RoleRouter allowedRoles={["ROLE_PLAYER", "ROLE_ADMIN"]}>
               <PlayerLayout />
             </RoleRouter>
           }
           errorElement={<ErrorPage />}
         >
           <Route index element={<Navigate to="main" />} />
-          <Route path="main" element={<PlayerMainPage />} />
+          <Route
+            path="main"
+            loader={playerLoader}
+            element={<PlayerMainPage />}
+          />
           <Route path="apply" element={<PlayerApplyPage />} />
           <Route path="apply/result" element={<PlayerResultPage />} />
         </Route>
         <Route
           path="admin"
           element={
-            <RoleRouter allowedRoles={['ROLE_ADMIN']}>
+            <RoleRouter allowedRoles={["ROLE_ADMIN"]}>
               <AdminLayout />
             </RoleRouter>
           }
@@ -101,8 +105,8 @@ const router = createBrowserRouter(
         </Route>
         <Route path="logout" action={logoutAction} />
       </Route>
-    </Route>,
-  ),
+    </Route>
+  )
 );
 
 export default router;

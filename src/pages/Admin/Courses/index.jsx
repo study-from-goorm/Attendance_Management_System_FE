@@ -1,8 +1,8 @@
-import { Outlet, useLoaderData } from 'react-router-dom';
-import PageTitle from '../../../components/PageTitle';
-import Search from './CourseSearch';
-import Table from './CoursesTable';
-import { fetchCourses } from '../../../api/reactQuery';
+import { Outlet, useLoaderData } from "react-router-dom";
+import PageTitle from "../../../components/PageTitle";
+import Search from "./CourseSearch";
+import Table from "./CoursesTable";
+import { fetchCourses } from "../../../api/requestApi";
 
 function Courses() {
   const courses = useLoaderData();

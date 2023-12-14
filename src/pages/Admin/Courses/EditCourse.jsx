@@ -1,17 +1,17 @@
-import { Modal } from 'antd';
+import { Modal } from "antd";
 import {
   fetchCourse,
   queryClient,
   updateCourse,
-} from '../../../api/reactQuery';
+} from "../../../api/requestApi";
 import {
   useLoaderData,
   useNavigate,
   useSubmit,
   redirect,
-} from 'react-router-dom';
-import PageTitle from '../../../components/PageTitle';
-import CourseForm from './CourseForm';
+} from "react-router-dom";
+import PageTitle from "../../../components/PageTitle";
+import CourseForm from "./CourseForm";
 
 function EditCourse() {
   const navigate = useNavigate();
@@ -19,11 +19,11 @@ function EditCourse() {
   const submit = useSubmit();
 
   const handleCancel = () => {
-    navigate('/admin/courses');
+    navigate("/admin/courses");
   };
 
   const handleSubmit = (formData) => {
-    submit(formData, { method: 'PATCH' });
+    submit(formData, { method: "PATCH" });
   };
   return (
     <Modal open={true} onCancel={handleCancel} footer={null}>
@@ -37,7 +37,7 @@ export default EditCourse;
 
 export async function loader({ params }) {
   return queryClient.fetchQuery({
-    queryKey: ['courses', { courseId: params.id }],
+    queryKey: ["courses", { courseId: params.id }],
     queryFn: ({ signal }) => fetchCourse({ signal, id: params.id }),
   });
 }
@@ -47,6 +47,6 @@ export async function action({ request, params }) {
   const updatedData = Object.fromEntries(formData);
 
   await updateCourse({ id: params.id, courseData: updatedData });
-  await queryClient.invalidateQueries(['courses']);
-  return redirect('/admin/courses');
+  await queryClient.invalidateQueries(["courses"]);
+  return redirect("/admin/courses");
 }
