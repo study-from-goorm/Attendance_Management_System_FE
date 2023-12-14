@@ -14,9 +14,9 @@ function MainLayout() {
     }
 
     switch (role) {
-      case 'admin':
+      case 'ROLE_ADMIN':
         return <Navigate to="/admin" state={{ from: location }} replace />;
-      case 'player':
+      case 'ROLE_PLAYER':
         return <Navigate to="/player" state={{ from: location }} replace />;
       default:
         return null;

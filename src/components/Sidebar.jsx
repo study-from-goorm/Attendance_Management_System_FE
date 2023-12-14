@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa6';
 import { IoMdCloudOutline, IoIosLogOut } from 'react-icons/io';
 import { IoHomeOutline, IoSettingsOutline } from 'react-icons/io5';
-
+import { SiGoogleclassroom } from 'react-icons/si';
 import { getCurrentUser } from '../store/userSlice';
 import { useSelector } from 'react-redux';
 import { NavLink, Form } from 'react-router-dom';
@@ -34,7 +34,7 @@ const Sidebar = () => {
       <div className="pl-4">
         <ul className="space-y-1">
           {/* 어드민 */}
-          {role === 'admin' && (
+          {role === 'ROLE_ADMIN' && (
             <>
               <p className={sectionClass}>ADMIN</p>
               <li>
@@ -46,6 +46,17 @@ const Sidebar = () => {
                 >
                   <IoHomeOutline className="text-xl" />
                   <span className="font-medium ml-2">대시보드</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/admin/courses"
+                  className={({ isActive }) =>
+                    `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
+                  }
+                >
+                  <SiGoogleclassroom className="text-xl" />
+                  <span className="font-medium ml-2">과정 정보</span>
                 </NavLink>
               </li>
               <li>
@@ -84,43 +95,48 @@ const Sidebar = () => {
             </>
           )}
           {/* 플레이어 */}
-          <p className={sectionClass}>PLAYER</p>
-          <li>
-            <NavLink
-              to="/player/main"
-              className={({ isActive }) =>
-                `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
-              }
-            >
-              <FaChalkboardUser className="text-xl" />
-              <span className="font-medium ml-2">출결 정보</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/player/apply"
-              className={({ isActive }) =>
-                `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
-              }
-              end
-            >
-              <FaWandMagic className="text-xl" />
-              <span className="font-medium ml-2">신청 관리</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/player/apply/result"
-              className={({ isActive }) =>
-                `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
-              }
-            >
-              <FaWandMagicSparkles className="text-xl" />
-              <span className="font-medium ml-2">신청 결과</span>
-            </NavLink>
-          </li>
+          {role === 'ROLE_ADMIN' && (
+            <>
+              {' '}
+              <p className={sectionClass}>PLAYER</p>
+              <li>
+                <NavLink
+                  to="/player/main"
+                  className={({ isActive }) =>
+                    `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
+                  }
+                >
+                  <FaChalkboardUser className="text-xl" />
+                  <span className="font-medium ml-2">출결 정보</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/player/apply"
+                  className={({ isActive }) =>
+                    `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
+                  }
+                  end
+                >
+                  <FaWandMagic className="text-xl" />
+                  <span className="font-medium ml-2">신청 관리</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/player/apply/result"
+                  className={({ isActive }) =>
+                    `${iconClass} ${isActive ? 'bg-gray-200' : ''}`
+                  }
+                >
+                  <FaWandMagicSparkles className="text-xl" />
+                  <span className="font-medium ml-2">신청 결과</span>
+                </NavLink>
+              </li>
+            </>
+          )}
           {/* 공통 */}
-          <p className={sectionClass}>USERS</p>
+          <p className={sectionClass}>ACTION</p>
           <li>
             <Form action="/logout" method="post" className={iconClass}>
               <IoIosLogOut className="text-xl" />

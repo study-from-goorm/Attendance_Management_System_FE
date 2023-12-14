@@ -1,17 +1,17 @@
-import { Card, Button, Select } from 'antd';
-import { axiosPrivate } from '../../../api/axiosInstance';
-import PageTitle from '../../../components/PageTitle';
-import { useState, useEffect } from 'react';
+import { Card, Button, Select } from "antd";
+import { axiosPrivate } from "../../../api/axiosInstance";
+import PageTitle from "../../../components/PageTitle";
+import { useState, useEffect } from "react";
 import {
   useLoaderData,
   useSearchParams,
   Outlet,
   useNavigate,
-} from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCourses, fetchPlayersByCourse } from '../../../api/reactQuery';
-import LoadingIndicator from '../../../components/UI/LoadingIndicator';
-import PlayersInfoTable from './PlayersInfoTable';
+} from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCourses, fetchPlayersByCourse } from "../../../api/requestApi";
+import LoadingIndicator from "../../../components/UI/LoadingIndicator";
+import PlayersInfoTable from "./PlayersInfoTable";
 
 function PlayersInfo() {
   const [selectedCourse, setSelectedCourse] = useState();
@@ -20,10 +20,10 @@ function PlayersInfo() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const currentCourse = searchParams.get('course');
-  const queryString = currentCourse ? `?course=${currentCourse}` : '';
+  const currentCourse = searchParams.get("course");
+  const queryString = currentCourse ? `?course=${currentCourse}` : "";
   useEffect(() => {
-    const courseQueryParam = searchParams.get('course');
+    const courseQueryParam = searchParams.get("course");
     if (courseQueryParam) {
       setSearchedCourse(parseInt(courseQueryParam));
       setSelectedCourse(parseInt(courseQueryParam));
@@ -36,7 +36,7 @@ function PlayersInfo() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['players', { course: searchedCourse }],
+    queryKey: ["players", { course: searchedCourse }],
     queryFn: ({ signal, queryKey }) =>
       fetchPlayersByCourse({ signal, ...queryKey[1] }),
     enabled: searchedCourse !== undefined,
@@ -67,8 +67,11 @@ function PlayersInfo() {
     navigate(`/admin/players/new${queryString}`);
   };
 
-  const handleDeletePlayer = () => {
-    console.log('handleDeletePlayer!!');
+  const handleDeletePlayer = (playerId, playerName) => {
+    if (confirm(`${playerName}를 제거하시겠습니까?`)) {
+      mutate({ id: playerId });
+    }
+    return false;
   };
 
   let content = null;
@@ -82,9 +85,7 @@ function PlayersInfo() {
   }
 
   if (isError) {
-    content = (
-      <p className="text-red-600 text-center font-semibold">{error.message}</p>
-    );
+    content = <p className="text-red-600 text-center font-semibold">{error}</p>;
   }
 
   if (players) {
@@ -103,8 +104,8 @@ function PlayersInfo() {
       <PageTitle title="플레이어 정보" />
       <Card
         bodyStyle={{
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
         <div className="space-x-2">
@@ -127,7 +128,7 @@ function PlayersInfo() {
           </Button>
         </div>
       </Card>
-      <Card className={searchedCourse ? '' : 'hidden'}>{content}</Card>
+      <Card className={searchedCourse ? "" : "hidden"}>{content}</Card>
     </>
   );
 }

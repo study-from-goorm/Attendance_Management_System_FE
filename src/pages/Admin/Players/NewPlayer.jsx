@@ -1,21 +1,21 @@
-import { useNavigate, useLoaderData, useSearchParams } from 'react-router-dom';
-import PlayerForm from './PlayerForm';
-import { Modal } from 'antd';
-import PageTitle from '../../../components/PageTitle';
-import { useMutation } from '@tanstack/react-query';
-import { createNewPlayer, queryClient } from '../../../api/reactQuery';
+import { useNavigate, useLoaderData, useSearchParams } from "react-router-dom";
+import PlayerForm from "./PlayerForm";
+import { Modal } from "antd";
+import PageTitle from "../../../components/PageTitle";
+import { useMutation } from "@tanstack/react-query";
+import { createNewPlayer, queryClient } from "../../../api/requestApi";
 
 function NewPlayer() {
   const navigate = useNavigate();
   const courses = useLoaderData();
   const [searchParams] = useSearchParams();
-  const searchedCourse = searchParams.get('course');
-  const queryString = searchedCourse ? `?course=${searchedCourse}` : '';
+  const searchedCourse = searchParams.get("course");
+  const queryString = searchedCourse ? `?course=${searchedCourse}` : "";
 
   const { mutate } = useMutation({
     mutationFn: createNewPlayer,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['players'] });
+      queryClient.invalidateQueries({ queryKey: ["players"] });
       navigate(`/admin/players${queryString}`);
     },
   });
@@ -25,7 +25,6 @@ function NewPlayer() {
   };
 
   const handleSubmit = (formData) => {
-    console.log('newPlayer handlesubmit', formData);
     mutate(formData);
   };
   return (
