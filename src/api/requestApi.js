@@ -177,7 +177,7 @@ export async function updateApplication({ id, applicationData }) {
 export async function newPlayerApplication({ playerId, data }) {
   try {
     const response = await axiosPrivate.post(
-      `/player/applications/${playerId}`,
+      `/player/${playerId}/applications`,
       data
     );
     console.log(response.data);
