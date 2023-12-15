@@ -4,8 +4,9 @@ import { CellRender } from "./CellData";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-const PlayerCalendar = () => {
-  const validRange = [dayjs("2023-11-13"), dayjs("2023-12-12")];
+const PlayerCalendar = ({ validRange, unitPeriod }) => {
+  // const validRange = [dayjs("2023-11-13"), dayjs("2023-12-12")];
+
   return (
     <div>
       <Calendar

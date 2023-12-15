@@ -11,32 +11,71 @@ import {
 } from "antd";
 import PlayerCalendar from "../../components/Calendar/PlayerCalendar";
 import store from "../../store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { fetchPlayerData, queryClient } from "../../api/requestApi";
 import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
 import { waitForRehydration } from "../../utils";
+import { setPersonalData } from "../../store/personalDataSlice";
 
 const today = dayjs();
 
+// Before Render : playerId, currentUnitPeriod로 출결 정보 fetch
+// 현재 단위기간 서버 로직 준비중으로, 임시로 월별 데이터 fetch중
 export const loader = async () => {
   await waitForRehydration();
   const playerId = store.getState().user.playerId;
+  const unitPeriod = 1;
 
-  return queryClient.fetchQuery({
-    queryKey: ["player_attendanceData"],
-    queryFn: () => fetchPlayerData(playerId, today.year(), today.month()),
-  });
+  return queryClient
+    .fetchQuery({
+      queryKey: ["player_attendanceData", { unitPeriod }],
+      queryFn: () =>
+        fetchPlayerData(playerId, today.year(), today.month() + unitPeriod),
+    })
+    .then((data) => store.dispatch(setPersonalData(data)));
 };
 
 const PlayerMainPage = () => {
-  const [unitPeriod, setUnitPeriod] = useState(1); // 단위기간
-  const { playerName, statusCount, totalDays } = queryClient.getQueryData([
-    "player_attendanceData",
-  ]);
+  const playerId = store.getState().user.playerId;
+  const currentUnitPeriod = 1; // 최초 로그인 시 현재 player가 속한 단위기간을 표시하기 위함 (추후 getQueryData로 대체)
+  const [unitPeriod, setUnitPeriod] = useState(currentUnitPeriod); // 선택된 단위기간
+  const [validRange, setValidRange] = useState(); // 선택된 단위기간 범위
+  const { playerName, totalDays, statusCount } = store.getState().personalData;
 
-  const attendRate = parseInt((statusCount.present / totalDays) * 100);
+  useEffect(() => {
+    // Player 단위기간 선택 시 : 해당 단위기간에 대한 출석 data fetch
+    queryClient
+      .fetchQuery({
+        queryKey: ["player_attendanceData", { unitPeriod }],
+        queryFn: () =>
+          fetchPlayerData(playerId, today.year(), today.month() + unitPeriod),
+      })
+      .then((data) => store.dispatch(setPersonalData(data)))
+      .catch((error) => {
+        // 아직 해당 단위기간에 대한 Data가 없는 경우
+        console.log(error);
+        alert("해당 단위기간의 데이터는 불러올 수 없습니다.");
+        setUnitPeriod(currentUnitPeriod);
+      });
+
+    // 단위기간 시작일, 종료일 설정 (Calendar 표시용)
+    setValidRange(); // server 로직 완료되면 반영 예정
+  }, [unitPeriod, validRange]);
+
+  // 단위기간 출석률 계산 로직
+  const attendRate = (totalDays, { absent, partiallyPresent }) => {
+    let sumPartialPresent = 0;
+    if (partiallyPresent >= 3) {
+      sumPartialPresent = parseInt(partiallyPresent / 3);
+    }
+
+    return (
+      ((totalDays - absent - sumPartialPresent) * 100) /
+      totalDays
+    ).toFixed(2);
+  };
 
   return (
     <div>
@@ -73,6 +112,7 @@ const PlayerMainPage = () => {
                   </Typography.Text>
                   <Select
                     defaultValue={unitPeriod}
+                    value={unitPeriod}
                     style={{ width: 120 }}
                     onChange={(e) => setUnitPeriod(e)}
                     options={[
@@ -116,7 +156,7 @@ const PlayerMainPage = () => {
                 <Progress
                   title="단위기간 출석률"
                   type="circle"
-                  percent={attendRate}
+                  percent={attendRate(totalDays, statusCount)}
                   success={{
                     percent: parseInt((statusCount.present / totalDays) * 100),
                   }}
@@ -166,7 +206,7 @@ const PlayerMainPage = () => {
         </Space>
 
         <Card>
-          <PlayerCalendar />
+          <PlayerCalendar validRange={validRange} unitPeriod={unitPeriod} />
         </Card>
       </Flex>
     </div>
