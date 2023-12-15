@@ -22,19 +22,26 @@ function PlayerResultPage() {
 
   const columns = [
     {
-      title: "신청 날짜",
-      dataIndex: "applicationTargetDate",
-      sorter: (a, b) => dayjs(a) - dayjs(b),
-      sortDirections: ["descend"],
-    },
-    {
       title: "신청 구분",
       dataIndex: "applicationType",
       render: (type) => <Tag>{type}</Tag>,
     },
     {
+      title: "출결 신청 적용일",
+      dataIndex: "applicationTargetDate",
+      sorter: (a, b) => dayjs(a) - dayjs(b),
+      sortDirections: ["descend"],
+    },
+
+    {
       title: "신청 사유",
       dataIndex: "applicationReason",
+    },
+    {
+      title: "신청일",
+      dataIndex: "applicationDate",
+      sorter: (a, b) => dayjs(a) - dayjs(b),
+      sortDirections: ["descend"],
     },
     {
       title: "상태",
@@ -46,6 +53,7 @@ function PlayerResultPage() {
   const data = queryData.map((item, idx) => {
     return {
       key: idx,
+      applicationDate: item.applicationDate,
       applicationTargetDate: item.applicationTargetDate,
       applicationType: item.applicationType,
       applicationReason: item.applicationReason,
