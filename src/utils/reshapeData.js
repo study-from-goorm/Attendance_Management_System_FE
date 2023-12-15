@@ -6,7 +6,7 @@ export const reshapeData = (data, currentDate, courseName) => {
         return {
             date: currentDate,
             courseName: courseName,
-            players: [
+            playerSessions: [
                 {
                     playerName: data.name,
                     playerId: data.id,
@@ -44,7 +44,7 @@ export const reshapeData = (data, currentDate, courseName) => {
     const reshapedData = {
         date: currentDate,
         courseName: courseName,
-        players: reshapedPlayerData
+        playerSessions: reshapedPlayerData
     };
 
     return reshapedData;

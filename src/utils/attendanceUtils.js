@@ -31,7 +31,7 @@ export const getAttendanceNumericValue = (textValue) => {
     const statusKeys = Object.keys (attendanceStatus);
     for (let key of statusKeys) {
         if (attendanceStatus[key] === textValue) {
-            return key;
+            return Number(key);
         }
     }
     return null; // 혹은 적절한 기본값
