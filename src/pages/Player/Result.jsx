@@ -18,23 +18,30 @@ export const loader = async () => {
 };
 
 function PlayerResultPage() {
-  // const queryData = queryClient.getQueryData(["player_applicationData"]);
+  const queryData = queryClient.getQueryData(["player_applicationData"]);
 
   const columns = [
-    {
-      title: "신청 날짜",
-      dataIndex: "applicationTargetDate",
-      sorter: (a, b) => dayjs(a) - dayjs(b),
-      sortDirections: ["descend"],
-    },
     {
       title: "신청 구분",
       dataIndex: "applicationType",
       render: (type) => <Tag>{type}</Tag>,
     },
     {
+      title: "출결 신청 적용일",
+      dataIndex: "applicationTargetDate",
+      sorter: (a, b) => dayjs(a) - dayjs(b),
+      sortDirections: ["descend"],
+    },
+
+    {
       title: "신청 사유",
       dataIndex: "applicationReason",
+    },
+    {
+      title: "신청일",
+      dataIndex: "applicationDate",
+      sorter: (a, b) => dayjs(a) - dayjs(b),
+      sortDirections: ["descend"],
     },
     {
       title: "상태",
@@ -43,37 +50,47 @@ function PlayerResultPage() {
     },
   ];
 
+  const data = queryData.map((item, idx) => {
+    return {
+      key: idx,
+      applicationDate: item.applicationDate,
+      applicationTargetDate: item.applicationTargetDate,
+      applicationType: item.applicationType,
+      applicationReason: item.applicationReason,
+      applicationStatus: item.applicationStatus,
+    };
+  });
   // 임시 mock data
-  const data = [
-    {
-      key: "1",
-      applicationTargetDate: "2023-12-08",
-      applicationType: "조퇴",
-      applicationReason: "병원 예약이 있습니다.",
-      applicationStatus: "승인",
-    },
-    {
-      key: "2",
-      applicationTargetDate: "2023-12-11",
-      applicationType: "공결",
-      applicationReason: "국민취업지원제도 대면 상담",
-      applicationStatus: "거절",
-    },
-    {
-      key: "3",
-      applicationTargetDate: "2023-12-14",
-      applicationType: "외출",
-      applicationReason: "개인 사정으로 인한 외출",
-      applicationStatus: "대기",
-    },
-    {
-      key: "4",
-      applicationTargetDate: "2023-12-20",
-      applicationType: "휴가",
-      applicationReason: "개인 사유로 인한 휴가",
-      applicationStatus: "대기",
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: "1",
+  //     applicationTargetDate: "2023-12-08",
+  //     applicationType: "조퇴",
+  //     applicationReason: "병원 예약이 있습니다.",
+  //     applicationStatus: "승인",
+  //   },
+  //   {
+  //     key: "2",
+  //     applicationTargetDate: "2023-12-11",
+  //     applicationType: "공결",
+  //     applicationReason: "국민취업지원제도 대면 상담",
+  //     applicationStatus: "거절",
+  //   },
+  //   {
+  //     key: "3",
+  //     applicationTargetDate: "2023-12-14",
+  //     applicationType: "외출",
+  //     applicationReason: "개인 사정으로 인한 외출",
+  //     applicationStatus: "대기",
+  //   },
+  //   {
+  //     key: "4",
+  //     applicationTargetDate: "2023-12-20",
+  //     applicationType: "휴가",
+  //     applicationReason: "개인 사유로 인한 휴가",
+  //     applicationStatus: "대기",
+  //   },
+  // ];
 
   return (
     <Flex vertical gap="large">

@@ -66,7 +66,7 @@ const router = createBrowserRouter(
           <Route path="apply" element={<PlayerApplyPage />} />
           <Route
             path="apply/result"
-            // loader={applyResultLoader}
+            loader={applyResultLoader}
             element={<PlayerResultPage />}
           />
         </Route>

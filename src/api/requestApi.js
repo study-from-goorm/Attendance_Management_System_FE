@@ -174,12 +174,13 @@ export async function updateApplication({ id, applicationData }) {
 }
 
 // [POST] New Player Application
-export async function newPlayerApplication(playerId, data) {
+export async function newPlayerApplication({ playerId, data }) {
   try {
     const response = await axiosPrivate.post(
       `/player/applications/${playerId}`,
       data,
     );
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.error("err", err);

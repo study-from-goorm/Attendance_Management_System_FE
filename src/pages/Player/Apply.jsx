@@ -22,7 +22,11 @@ function PlayerApplyPage() {
   });
 
   const handleSubmit = (data) => {
-    mutate(playerId, data);
+    const postReqData = {
+      playerId: playerId,
+      data: { ...data },
+    };
+    mutate(postReqData);
   };
 
   return (
