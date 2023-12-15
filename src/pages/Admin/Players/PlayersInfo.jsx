@@ -1,5 +1,4 @@
 import { Card, Button, Select } from "antd";
-import { axiosPrivate } from "../../../api/axiosInstance";
 import PageTitle from "../../../components/PageTitle";
 import { useState, useEffect } from "react";
 import {
@@ -8,8 +7,13 @@ import {
   Outlet,
   useNavigate,
 } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCourses, fetchPlayersByCourse } from "../../../api/requestApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  deletePlayer,
+  fetchCourses,
+  fetchPlayersByCourse,
+  queryClient,
+} from "../../../api/requestApi";
 import LoadingIndicator from "../../../components/UI/LoadingIndicator";
 import PlayersInfoTable from "./PlayersInfoTable";
 
@@ -47,6 +51,13 @@ function PlayersInfo() {
       });
 
       return updated;
+    },
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: deletePlayer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["players"] });
     },
   });
 

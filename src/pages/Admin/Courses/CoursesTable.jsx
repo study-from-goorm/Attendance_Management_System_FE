@@ -1,19 +1,28 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteCourse, fetchCourses } from "../../../api/requestApi";
+import { deleteCourse } from "../../../api/requestApi";
 import { Card, Table, Space, Button } from "antd";
 import LoadingIndicator from "../../../components/UI/LoadingIndicator";
 import { Link } from "react-router-dom";
-import { queryClient } from "../../../api/requestApi";
+import { queryClient, fetchCourses } from "../../../api/requestApi";
 
 function CoursesTable() {
-  const { data: courses, isLoading } = useQuery({
+  const {
+    data: courses,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["courses"],
     queryFn: fetchCourses,
     select: (courses) => {
-      return courses.map((course) => ({
-        ...course,
-        key: course.courseId,
-      }));
+      if (courses instanceof Error) {
+        return courses.message;
+      } else {
+        return courses.map((course) => ({
+          ...course,
+          key: course.courseId,
+        }));
+      }
     },
   });
 
@@ -71,9 +80,17 @@ function CoursesTable() {
     );
   }
 
+  if (isError) {
+    // console.log("is Error 문 실행");
+    console.error("과정을 가져오는 데 오류가 발생했습니다:", error.message);
+  }
+
   if (courses) {
     content = <Table columns={columns} dataSource={courses} />;
   }
+
+  console.log("isError", isError);
+  console.log("error", error);
 
   return <Card>{content}</Card>;
 }

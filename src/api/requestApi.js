@@ -47,7 +47,7 @@ export async function fetchPlayer({ signal, id }) {
 export async function fetchPlayerData(playerId, year, month) {
   try {
     const response = await axiosPrivate.get(
-      `/player/${playerId}/${year}/${month}`
+      `/player/${playerId}/${year}/${month}`,
     );
     return response.data;
   } catch (err) {
@@ -70,7 +70,7 @@ export async function updatePlayer({ id, playerData }) {
   try {
     const response = await axiosPrivate.patch(
       `/admin/player/${id}`,
-      playerData
+      playerData,
     );
     return response.data;
   } catch (err) {
@@ -123,7 +123,7 @@ export async function updateCourse({ id, courseData }) {
   try {
     const response = await axiosPrivate.patch(
       `/admin/course/${id}`,
-      courseData
+      courseData,
     );
     return response.data;
   } catch (err) {
@@ -165,7 +165,7 @@ export async function updateApplication({ id, applicationData }) {
   try {
     const response = await axiosPrivate.patch(
       `/admin/applications/${id}`,
-      applicationData
+      applicationData,
     );
     return response.data;
   } catch (err) {
@@ -178,13 +178,13 @@ export async function newPlayerApplication(playerId, data) {
   try {
     const response = await axiosPrivate.post(
       `/player/applications/${playerId}`,
-      data
+      data,
     );
     return response.data;
   } catch (err) {
     console.error("err", err);
     throw new Error(
-      err.message || "신청 중 문제가 발생했습니다. 다시 시도해주세요."
+      err.message || "신청 중 문제가 발생했습니다. 다시 시도해주세요.",
     );
   }
 }
@@ -197,7 +197,8 @@ export async function fetchApplicationResult(playerId) {
   } catch (err) {
     console.log("err,", err);
     throw new Error(
-      err.response.headers.validation || "신청 결과를 불러오는 데 실패했습니다."
+      err.response.headers.validation ||
+        "신청 결과를 불러오는 데 실패했습니다.",
     );
   }
 }
@@ -205,7 +206,7 @@ export async function fetchApplicationResult(playerId) {
 export async function fetchAttendanceData({ course, date }) {
   try {
     const response = await axiosPrivate.get(
-      `/admin/attendances/${course}/${date}`
+      `/admin/attendances/${course}/${date}`,
     );
     return response.data;
   } catch (err) {

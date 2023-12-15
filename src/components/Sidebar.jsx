@@ -97,7 +97,6 @@ const Sidebar = () => {
           {/* 플레이어 */}
           {role === "ROLE_PLAYER" && (
             <>
-              {" "}
               <p className={sectionClass}>PLAYER</p>
               <li>
                 <NavLink
@@ -143,10 +142,19 @@ const Sidebar = () => {
               <button className="font-medium ml-2">로그아웃</button>
             </Form>
           </li>
-          <li className={iconClass}>
-            <IoSettingsOutline className="text-xl" />
-            <span className="font-medium ml-2">설정</span>
-          </li>
+          {role === "ROLE_PLAYER" && (
+            <li>
+              <NavLink
+                to="/setting"
+                className={({ isActive }) =>
+                  `${iconClass} ${isActive ? "bg-gray-200" : ""}`
+                }
+              >
+                <IoSettingsOutline className="text-xl" />
+                <span className="font-medium ml-2">설정</span>
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
     </div>

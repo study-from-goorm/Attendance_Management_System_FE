@@ -1,22 +1,22 @@
-import { Button, Card, Space, Table, Tag } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Card, Space, Table, Tag } from "antd";
+import { Link } from "react-router-dom";
 
 function PlayersInfoTable({ players, queryString, handleDeletePlayer }) {
   const columns = [
     {
-      title: '이름',
-      dataIndex: 'playerName',
-      defaultSortOrder: 'ascend',
+      title: "이름",
+      dataIndex: "playerName",
+      defaultSortOrder: "ascend",
       sorter: (a, b) => a.playerName.localeCompare(b.playerName),
-      sortDirections: ['descend', 'ascend'],
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: '이메일',
-      dataIndex: 'playerEmail',
+      title: "이메일",
+      dataIndex: "playerEmail",
     },
     {
-      title: '과정',
-      dataIndex: 'courseName',
+      title: "과정",
+      dataIndex: "courseName",
       render: (courseName) => <Tag>{courseName}</Tag>,
     },
     {
@@ -28,8 +28,13 @@ function PlayersInfoTable({ players, queryString, handleDeletePlayer }) {
           >
             수정하기
           </Link>
-          <Button>삭제하기</Button>
-          <a className="text-xs">삭제하기</a>
+          <Button
+            type="text"
+            onClick={() => handleDeletePlayer(record.key, record.playerName)}
+            className="text-xs"
+          >
+            삭제하기
+          </Button>
         </Space>
       ),
     },
