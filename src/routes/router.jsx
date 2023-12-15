@@ -14,7 +14,9 @@ import RoleRouter from "./RoleRouter";
 import PlayerLayout from "../layouts/PlayerLayout";
 import PlayerMainPage, { loader as playerLoader } from "../pages/Player/Main";
 import PlayerApplyPage from "../pages/Player/Apply";
-import PlayerResultPage from "../pages/Player/Result";
+import PlayerResultPage, {
+  loader as applyResultLoader,
+} from "../pages/Player/Result";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminMainPage from "../pages/Admin/Main";
 import PlayersInfo, {
@@ -61,7 +63,11 @@ const router = createBrowserRouter(
             element={<PlayerMainPage />}
           />
           <Route path="apply" element={<PlayerApplyPage />} />
-          <Route path="apply/result" element={<PlayerResultPage />} />
+          <Route
+            path="apply/result"
+            // loader={applyResultLoader}
+            element={<PlayerResultPage />}
+          />
         </Route>
         <Route
           path="admin"
@@ -116,8 +122,8 @@ const router = createBrowserRouter(
         </Route>
         <Route path="logout" action={logoutAction} />
       </Route>
-    </Route>,
-  ),
+    </Route>
+  )
 );
 
 export default router;
