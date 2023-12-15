@@ -25,17 +25,19 @@ const AttendanceTable = () => {
             queryFn : async () => {
                 try {
                     const data = await fetchAttendanceData ({ course : currentCourse.courseId, date : currentDate })
+                    console.log ("=>(AttendanceManagement.jsx:115) 데이터 부름!");
                     setIsSearch (false);
                     return data;
                 } catch (error) {
                     alert ('데이터가 없습니다.')
+                    const data = await fetchAttendanceData ({ course : prevDateCourse.course.courseId, date : prevDateCourse.date })
+                    console.log("=>(AttendanceManagement.jsx:34) data", data);
                     setCurrentDate (prevDateCourse.date);
                     setCurrentCourse (prevDateCourse.course);
                     setIsSearch (false);
-                    return attendanceData;
+                    return data;
                 }
             },
-            staleTime : 300000, // 5 minutes
             refetchOnWindowFocus : true,
             enabled : !!currentCourse.courseId && !!currentDate && isSearch
         });
@@ -45,29 +47,27 @@ const AttendanceTable = () => {
         }, [ dataSource ]);
 
         useEffect(() => {
-            if(!currentCourse.courseId) return;
-        }, [isSearch]);
+            console.log("=>(AttendanceManagement.jsx:56) 쿼리조건을 만족하시오?", !!currentCourse.courseId && !!currentDate && isSearch);
+        }, [currentCourse, currentDate, isSearch]);
         // 검색
         const search = useCallback(() => {
-            console.log("=>(AttendanceManagement.jsx:43) currentDate", currentDate);
-            console.log("=>(AttendanceManagement.jsx:43) currentCourse", currentCourse);
             setIsSearch(true);
-        }, [attendanceData, prevDateCourse.date, prevDateCourse.course, currentDate, currentCourse]);
+        }, [setIsSearch]);
 
-        useEffect (() => {
-            console.log ("=>(AttendanceManagement.jsx:115) attendanceData", attendanceData);
-        }, [ attendanceData]);
-
-        useEffect (() => {
-            console.log ("=>(AttendanceManagement.jsx:115) currentCourse", currentCourse);
-        }, [ currentCourse]);
-
-        useEffect (() => {
-            console.log ("=>(AttendanceManagement.jsx:115) currentDate", currentDate);
-        }, [ currentDate ]);
-        useEffect (() => {
-            console.log ("=>(AttendanceManagement.jsx:115) changedData", changedData);
-        }, [ changedData ]);
+        // useEffect (() => {
+        //     console.log ("=>(AttendanceManagement.jsx:115) attendanceData", attendanceData);
+        // }, [ attendanceData]);
+        //
+        // useEffect (() => {
+        //     console.log ("=>(AttendanceManagement.jsx:115) currentCourse", currentCourse);
+        // }, [ currentCourse]);
+        //
+        // useEffect (() => {
+        //     console.log ("=>(AttendanceManagement.jsx:115) currentDate", currentDate);
+        // }, [ currentDate ]);
+        // useEffect (() => {
+        //     console.log ("=>(AttendanceManagement.jsx:115) changedData", changedData);
+        // }, [ changedData ]);
 
 
 
@@ -99,8 +99,23 @@ const AttendanceTable = () => {
         }, [ dataSource ]);
 
         const handleChange = useCallback ((value, studentIndex, periodIndex) => {
+            if(value === '조퇴' || value === '공결'){
+                const updatedDataSource = dataSource.map ((row, index) => {
+                    if (index === studentIndex) {
+                        return {
+                            ...row,
+                            periods : row.periods.map ((periodValue, idx) =>
+                                idx >= periodIndex ? value : periodValue
+                            )
+                        };
+                    }
+                    return row;
+                });
+                setDataSource (updatedDataSource);
+                return;
+            }
             updateDataSource (studentIndex, periodIndex, value);
-        }, [ updateDataSource ]);
+        }, [ updateDataSource, dataSource ]);
 
         //모두 출석 버튼 클릭 시
         const handleAllAttendance = useCallback (() => {
@@ -115,25 +130,38 @@ const AttendanceTable = () => {
             setDataSource (updatedDataSource);
         }, [ dataSource ]);
 
-        const reshapeDataCallback = useCallback ((data) => {
-            const reshapedData = reshapeData (data, currentDate, currentCourse.courseName);
-            setChangedData ({
-                [`${currentDate} - ${currentCourse.courseId}`] : reshapedData
-            });
+        const reshapeDataCallback = useCallback (async (data) => {
+            const reshapedData = await reshapeData (data, currentDate, currentCourse.courseName);
+            await setChangedData (reshapedData);
         }, [ currentDate, currentCourse.courseName ]);
 
         //변경 사항 제출
         const handleSubmit = async () => {
             try {
-                await reshapeDataCallback (dataSource);
-                await axiosPrivate.post (`/admin/attendances/${currentCourse.courseId}/${currentDate}`, changedData);
-                alert ('변경 사항이 성공적으로 저장되었습니다.');
-                setChangedData ({});
+                await reshapeDataCallback(dataSource);
             } catch (error) {
                 alert('변경 사항 저장에 실패했습니다.')
-                console.error ('Error submitting data:', error);
+                console.error('Error submitting data:', error);
             }
         };
+
+        useEffect(() => {
+            console.log("=>(AttendanceManagement.jsx:137) changedData", changedData);
+            const submitData = async () => {
+                try {
+                    await axiosPrivate.post(`/admin/attendances/${currentCourse.courseId}/${currentDate}`, changedData);
+                    alert('변경 사항이 성공적으로 저장되었습니다.');
+                    setChangedData({});
+                } catch (error) {
+                    alert('변경 사항 저장에 실패했습니다.')
+                    console.error('Error submitting data:', error);
+                }
+            };
+
+            if (Object.keys(changedData).length > 0) {
+                submitData();
+            }
+        }, [changedData]);
 
         // 초기화 버튼 클릭 시
         const handleReset = useCallback (() => {
