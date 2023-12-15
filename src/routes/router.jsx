@@ -39,6 +39,7 @@ import Application, {
   loader as applicationLoader,
   action as applicationAction,
 } from "../pages/Admin/Applications/Application";
+import Setting from "../pages/Setting";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -120,6 +121,7 @@ const router = createBrowserRouter(
             />
           </Route>
         </Route>
+        <Route path="setting" element={<Setting />} />
         <Route path="logout" action={logoutAction} />
       </Route>
     </Route>

@@ -55,7 +55,7 @@ export async function action({ request, params }) {
   const queryParams = url.searchParams;
   const courseId = queryParams.get("course");
 
-  // await updatePlayer({ id: params.id, playerData: updatedData });
-  // await queryClient.invalidateQueries(['playuers']);
+  await updatePlayer({ id: params.id, playerData: updatedData });
+  await queryClient.invalidateQueries(["players"]);
   return redirect(`/admin/players${courseId ? `?course=${courseId}` : ""}`);
 }

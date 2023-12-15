@@ -15,12 +15,7 @@ function PublicRouter() {
       return <Navigate to="/player" state={{ from: location }} replace />;
     }
   }
-  return (
-    <>
-      <h1>귀하는 로그인 되어있지 않습니다.</h1>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }
 
 export default PublicRouter;

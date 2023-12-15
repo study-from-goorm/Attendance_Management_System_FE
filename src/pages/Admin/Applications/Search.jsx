@@ -1,6 +1,11 @@
-import { Card } from "antd";
+import { Card, Input } from "antd";
+const { Search } = Input;
 
 function ApplicationsSearch() {
+  const onSearch = () => {
+    console.log("검색되었습니다.");
+  };
+
   return (
     <Card
       bodyStyle={{
@@ -8,7 +13,12 @@ function ApplicationsSearch() {
         alignItems: "center",
       }}
     >
-      <div>검색</div>
+      <Search
+        className="w-72"
+        placeholder="신청인을 검색해 주세요."
+        onSearch={onSearch}
+        enterButton
+      />
       <div className="flex-1 text-right"></div>
     </Card>
   );
