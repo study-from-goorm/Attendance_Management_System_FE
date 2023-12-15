@@ -2,7 +2,7 @@ import { Button, DatePicker, Flex, Form, Input, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 
 // Submit 버튼 활성화 <- 모든 validation 조건 충족시
-const SubmitButton = ({ form }) => {
+const SubmitButton = ({ form, onClick }) => {
   const [submittable, setSubmittable] = useState(false);
 
   // Watch all values
@@ -23,7 +23,12 @@ const SubmitButton = ({ form }) => {
   }, [values]);
 
   return (
-    <Button type="primary" htmlType="submit" disabled={!submittable}>
+    <Button
+      type="primary"
+      htmlType="submit"
+      onClick={() => onClick()}
+      disabled={!submittable}
+    >
       Submit
     </Button>
   );
@@ -33,18 +38,23 @@ const PlayerApplyForm = ({ onSubmit }) => {
   const [form] = Form.useForm();
 
   // Form 제출시
+  const handleSubmit = () => {
+    form.submit();
+  };
+
   const onFinish = (values) => {
     onSubmit({
       ...values,
-      applicationDate: values.applicationDate.format("YYYY-MM-DD"),
+      applicationTargetDate: values.applicationTargetDate.format("YYYY-MM-DD"),
     });
+    form.resetFields();
   };
 
   return (
     <Form form={form} onFinish={onFinish}>
       <Form.Item
         label="신청할 날짜"
-        name="applicationDate"
+        name="applicationTargetDate"
         rules={[
           {
             required: true,
@@ -90,7 +100,7 @@ const PlayerApplyForm = ({ onSubmit }) => {
       <Form.Item>
         <Flex justify="center">
           <Space>
-            <SubmitButton form={form} />
+            <SubmitButton form={form} onClick={handleSubmit} />
             <Button htmlType="reset">Reset</Button>
           </Space>
         </Flex>

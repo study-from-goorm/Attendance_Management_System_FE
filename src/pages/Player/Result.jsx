@@ -18,7 +18,7 @@ export const loader = async () => {
 };
 
 function PlayerResultPage() {
-  // const queryData = queryClient.getQueryData(["player_applicationData"]);
+  const queryData = queryClient.getQueryData(["player_applicationData"]);
 
   const columns = [
     {
@@ -43,37 +43,46 @@ function PlayerResultPage() {
     },
   ];
 
+  const data = queryData.map((item, idx) => {
+    return {
+      key: idx,
+      applicationTargetDate: item.applicationTargetDate,
+      applicationType: item.applicationType,
+      applicationReason: item.applicationReason,
+      applicationStatus: item.applicationStatus,
+    };
+  });
   // 임시 mock data
-  const data = [
-    {
-      key: "1",
-      applicationTargetDate: "2023-12-08",
-      applicationType: "조퇴",
-      applicationReason: "병원 예약이 있습니다.",
-      applicationStatus: "승인",
-    },
-    {
-      key: "2",
-      applicationTargetDate: "2023-12-11",
-      applicationType: "공결",
-      applicationReason: "국민취업지원제도 대면 상담",
-      applicationStatus: "거절",
-    },
-    {
-      key: "3",
-      applicationTargetDate: "2023-12-14",
-      applicationType: "외출",
-      applicationReason: "개인 사정으로 인한 외출",
-      applicationStatus: "대기",
-    },
-    {
-      key: "4",
-      applicationTargetDate: "2023-12-20",
-      applicationType: "휴가",
-      applicationReason: "개인 사유로 인한 휴가",
-      applicationStatus: "대기",
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: "1",
+  //     applicationTargetDate: "2023-12-08",
+  //     applicationType: "조퇴",
+  //     applicationReason: "병원 예약이 있습니다.",
+  //     applicationStatus: "승인",
+  //   },
+  //   {
+  //     key: "2",
+  //     applicationTargetDate: "2023-12-11",
+  //     applicationType: "공결",
+  //     applicationReason: "국민취업지원제도 대면 상담",
+  //     applicationStatus: "거절",
+  //   },
+  //   {
+  //     key: "3",
+  //     applicationTargetDate: "2023-12-14",
+  //     applicationType: "외출",
+  //     applicationReason: "개인 사정으로 인한 외출",
+  //     applicationStatus: "대기",
+  //   },
+  //   {
+  //     key: "4",
+  //     applicationTargetDate: "2023-12-20",
+  //     applicationType: "휴가",
+  //     applicationReason: "개인 사유로 인한 휴가",
+  //     applicationStatus: "대기",
+  //   },
+  // ];
 
   return (
     <Flex vertical gap="large">
