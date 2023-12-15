@@ -10,41 +10,66 @@ import {reshapeData} from "../../utils/reshapeData.js";
 import {LoadingOutlined} from "@ant-design/icons";
 
 const AttendanceTable = () => {
-        const [ prevDateCourse, setPrevDateCourse ] = useState ({
-            date : null,
-            course : { courseId : null, courseName : null }
-        });
         const [ currentDate, setCurrentDate ] = useState ('2023-10-13');
-        const [ currentCourse, setCurrentCourse ] = useState ({ courseId : 3, courseName : '풀스택 3회차' });
+        const [ currentCourse, setCurrentCourse ] = useState ({ courseId : null, courseName : null });
+        const [ prevDateCourse, setPrevDateCourse ] = useState ({
+            date : currentDate,
+            course : { courseId : currentCourse.courseId, courseName : currentCourse.courseName }
+        });
         const [ changedData, setChangedData ] = useState ({});
         const [ dataSource, setDataSource ] = useState ([])
-
+        const [ isSearch, setIsSearch ] = useState (false)
         // 데이터 패칭
         const { data : attendanceData, isLoading, isError } = useQuery ({
             queryKey : [ 'attendanceData', currentDate, currentCourse.courseId ],
-            queryFn : () => fetchAttendanceData ({ course : currentCourse.courseId, date : currentDate }),
+            queryFn : async () => {
+                try {
+                    const data = await fetchAttendanceData ({ course : currentCourse.courseId, date : currentDate })
+                    setIsSearch (false);
+                    return data;
+                } catch (error) {
+                    alert ('데이터가 없습니다.')
+                    setCurrentDate (prevDateCourse.date);
+                    setCurrentCourse (prevDateCourse.course);
+                    setIsSearch (false);
+                    return attendanceData;
+                }
+            },
             staleTime : 300000, // 5 minutes
-            refetchOnWindowFocus : true
+            refetchOnWindowFocus : true,
+            enabled : !!currentCourse.courseId && !!currentDate && isSearch
         });
-
-
-        // 데이터가 없으면 이전 데이터로 복구
-        useEffect (() => {
-            if (!attendanceData && prevDateCourse.date && prevDateCourse.course) {
-                alert ('데이터가 없습니다.')
-                setCurrentDate (prevDateCourse.date);
-                setCurrentCourse (prevDateCourse.course);
-            }
-        }, [ attendanceData, prevDateCourse ]);
-
 
         useEffect (() => {
             console.log ("=>(AttendanceManagement.jsx:115) dataSource", dataSource);
         }, [ dataSource ]);
 
+        useEffect(() => {
+            if(!currentCourse.courseId) return;
+        }, [isSearch]);
+        // 검색
+        const search = useCallback(() => {
+            console.log("=>(AttendanceManagement.jsx:43) currentDate", currentDate);
+            console.log("=>(AttendanceManagement.jsx:43) currentCourse", currentCourse);
+            setIsSearch(true);
+        }, [attendanceData, prevDateCourse.date, prevDateCourse.course, currentDate, currentCourse]);
+
+        useEffect (() => {
+            console.log ("=>(AttendanceManagement.jsx:115) attendanceData", attendanceData);
+        }, [ attendanceData]);
+
+        useEffect (() => {
+            console.log ("=>(AttendanceManagement.jsx:115) currentCourse", currentCourse);
+        }, [ currentCourse]);
+
+        useEffect (() => {
+            console.log ("=>(AttendanceManagement.jsx:115) currentDate", currentDate);
+        }, [ currentDate ]);
         useEffect (() => {
             console.log ("=>(AttendanceManagement.jsx:115) changedData", changedData);
         }, [ changedData ]);
+
+
 
         // 날짜 변경 핸들러
         const handleDateChange = useCallback ((date, dateString) => {
@@ -93,7 +118,8 @@ const AttendanceTable = () => {
         const reshapeDataCallback = useCallback ((data) => {
             const reshapedData = reshapeData (data, currentDate, currentCourse.courseName);
             setChangedData ({
-                [`${currentDate} - ${currentCourse.courseId}`] : reshapedData });
+                [`${currentDate} - ${currentCourse.courseId}`] : reshapedData
+            });
         }, [ currentDate, currentCourse.courseName ]);
 
         //변경 사항 제출
@@ -101,39 +127,47 @@ const AttendanceTable = () => {
             try {
                 await reshapeDataCallback (dataSource);
                 await axiosPrivate.post (`/admin/attendances/${currentCourse.courseId}/${currentDate}`, changedData);
-                alert ('변경 사항이 성공적으로 제출되었습니다.');
+                alert ('변경 사항이 성공적으로 저장되었습니다.');
                 setChangedData ({});
             } catch (error) {
+                alert('변경 사항 저장에 실패했습니다.')
                 console.error ('Error submitting data:', error);
             }
         };
 
-        //저장 버튼 클릭 시
-        const handleSave = useCallback(async (studentIndex) => {
+        // 초기화 버튼 클릭 시
+        const handleReset = useCallback (() => {
+            setDataSource (dataSource.map ((row) => {
+                return {
+                    ...row,
+                    periods : row.periods.map (() => {
+                        return '선택';
+                    })
+                };
+            }));
+        }, [ dataSource ]);
 
-            const savedData = dataSource[studentIndex];
-            console.log("=>(AttendanceManagement.jsx:119) dataSource", dataSource);
-            console.log("=>(AttendanceManagement.jsx:119) savedData", savedData);
+        // 한 명 출석 버튼 클릭 시
+        const handleOneAttendance = useCallback (async (studentIndex) => {
 
-            // savedData가 undefined인 경우 함수를 종료
-            if (!savedData) {
-                alert('저장할 데이터가 없습니다.');
-                return;
-            }
+            const updatedDataSource = dataSource.map ((row, index) => {
+                console.log ("=>(AttendanceManagement.jsx:115) row", row);
+                if (index === studentIndex) {
+                    return {
+                        ...row,
+                        periods : row.periods.map (() =>
+                            '출석'
+                        )
+                    };
+                }
+                return row;
+            });
+            setDataSource (updatedDataSource);
 
-            try {
-                await reshapeDataCallback([savedData]);
-                await axiosPrivate.post(`/admin/attendances/${currentCourse.courseId}/${currentDate}`,  changedData);
-                alert('변경 사항이 성공적으로 제출되었습니다.');
-                setChangedData({});
-            } catch (error) {
-                alert('변경 사항 제출에 실패했습니다.');
-                console.error('Error submitting data:', error);
-            }
-        }, [ changedData, dataSource, reshapeDataCallback, currentCourse.courseId, currentDate ]);
+        }, [ dataSource ]);
 
 
-        const columns = useMemo(() => getTableColumns (handleChange, handleSave, currentCourse.courseName));
+        const columns = useMemo (() => getTableColumns (handleChange, handleOneAttendance, currentCourse.courseName));
 
 
         useEffect (() => {
@@ -165,7 +199,21 @@ const AttendanceTable = () => {
 
         if (isError) {
 
-            return <div>Error...</div>;
+            return (
+                <div>
+                    <DateCourseSelector
+                        currentDate={currentDate}
+                        currentCourse={currentCourse}
+                        handleDateChange={handleDateChange}
+                        handleCourseChange={handleCourseChange}
+                        handleReset={handleReset}
+                        handleAllAttendance={handleAllAttendance}
+                        handleSubmit={handleSubmit}
+                        handleSearch={search}
+                    />
+                    <Table columns={columns} />
+                </div>
+            )
         }
 
         return (
@@ -175,14 +223,14 @@ const AttendanceTable = () => {
                     currentCourse={currentCourse}
                     handleDateChange={handleDateChange}
                     handleCourseChange={handleCourseChange}
+                    handleReset={handleReset}
                     handleAllAttendance={handleAllAttendance}
                     handleSubmit={handleSubmit}
+                    handleSearch={search}
                 />
                 <Table columns={columns} dataSource={dataSource} sticky={true} responsive={true}
                        pagination={{
-                           defaultPageSize : 20,
-                           showSizeChanger : true,
-                           pageSizeOptions : [ '10', '20', '30', '50', '60', '70', '100' ],
+                           defaultPageSize : 100,
                        }}
                 />
             </div>

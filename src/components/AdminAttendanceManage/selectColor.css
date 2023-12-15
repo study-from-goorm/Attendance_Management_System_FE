@@ -1,0 +1,30 @@
+/* 기본 스타일 */
+.select-attendance .ant-select-selector {
+    color: #000000 !important; /* 글씨 색상 */
+    background-color: transparent !important; /* 내부 선택기의 배경색을 투명하게 설정 */
+}
+
+.attendanceColor .ant-select-selector {
+    background-color: #98FB98 !important; /* 출석 - 파스텔 녹색 */
+    transition: background-color 1s;
+}
+.absentColor .ant-select-selector {
+    background-color: #FFB6C1 !important; /* 결석 - 파스텔 빨간색 */
+    transition: background-color 1s;
+}
+.lateColor .ant-select-selector {
+    background-color: #FFDAB9 !important; /* 외출 - 파스텔 주황색 */
+    transition: background-color 1s;
+}
+.leaveColor .ant-select-selector {
+    background-color: #DDA0DD !important; /* 조퇴 - 파스텔 보라색 */
+    transition: background-color 1s;
+}
+.earlyLeaveColor .ant-select-selector {
+    background-color: #DEB887 !important; /* 공결 - 파스텔 갈색 */
+    transition: background-color 1s;
+}
+.excusedColor .ant-select-selector {
+    background-color: #FFFACD !important; /* 지각 - 파스텔 노란색 */
+    transition: background-color 1s;
+}
