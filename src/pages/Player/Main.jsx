@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 import { fetchPlayerData, queryClient } from "../../api/requestApi";
 import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
-import { getCookiePlayerId } from "../../auth/cookie";
 import { waitForRehydration } from "../../utils";
 
 const today = dayjs();
@@ -26,17 +25,16 @@ export const loader = async () => {
   const playerId = store.getState().user.playerId;
 
   return queryClient.fetchQuery({
-    queryKey: ["player", playerId],
-    queryFn: () =>
-      fetchPlayerData(playerId, today.year(), today.month()).then((res) => {
-        return res;
-      }),
+    queryKey: ["player_attendanceData"],
+    queryFn: () => fetchPlayerData(playerId, today.year(), today.month()),
   });
 };
 
 const PlayerMainPage = () => {
   const [unitPeriod, setUnitPeriod] = useState(1); // 단위기간
-  const { playerName, statusCount, totalDays } = queryClient.getQueryData();
+  const { playerName, statusCount, totalDays } = queryClient.getQueryData([
+    "player_attendanceData",
+  ]);
 
   const attendRate = parseInt((statusCount.present / totalDays) * 100);
 
