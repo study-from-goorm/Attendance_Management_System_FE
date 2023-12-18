@@ -3,9 +3,19 @@ import locale from "antd/es/calendar/locale/ko_KR";
 import { CellRender } from "./CellData";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
-const PlayerCalendar = ({ validRange, unitPeriod }) => {
+const PlayerCalendar = ({ validRange }) => {
   // const validRange = [dayjs("2023-11-13"), dayjs("2023-12-12")];
+  const navigate = useNavigate();
+
+  const handleSelect = (date) => {
+    navigate(
+      `/player/main/dailyInfo?year=${dayjs(date).year()}&month=${
+        dayjs(date).month() + 1
+      }&day=${dayjs(date).date()}`
+    );
+  };
 
   return (
     <div>
@@ -14,6 +24,7 @@ const PlayerCalendar = ({ validRange, unitPeriod }) => {
         locale={locale}
         validRange={validRange}
         cellRender={CellRender}
+        onSelect={(date) => handleSelect(date)}
         headerRender={({ value, onChange }) => {
           const month = value.month();
 

@@ -18,6 +18,7 @@ import PageTitle from "../../components/PageTitle";
 import { CalendarTwoTone, DashboardTwoTone } from "@ant-design/icons";
 import { waitForRehydration } from "../../utils";
 import { setPersonalData } from "../../store/personalDataSlice";
+import { Outlet } from "react-router-dom";
 
 const today = dayjs();
 
@@ -79,6 +80,7 @@ const PlayerMainPage = () => {
 
   return (
     <div>
+      <Outlet />
       {/* Player's Dashboard */}
       <Flex vertical gap="middle">
         <Space>

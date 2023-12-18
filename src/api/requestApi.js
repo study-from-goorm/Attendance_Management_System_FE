@@ -43,7 +43,7 @@ export async function fetchPlayer({ signal, id }) {
   }
 }
 
-// Player Personal Info
+// [GET] Player Personal Info
 export async function fetchPlayerData(playerId, year, month) {
   try {
     const response = await axiosPrivate.get(
@@ -53,6 +53,18 @@ export async function fetchPlayerData(playerId, year, month) {
   } catch (err) {
     console.error("플레이어 정보를 불러올 수 없습니다", err);
     throw err;
+  }
+}
+
+// [GET] Player Daily Session Info
+export async function fetchPlayerDailyData(playerId, year, month, day) {
+  try {
+    const response = await axiosPrivate.get(
+      `/player/${playerId}/${year}/${month}/${day}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err) || "해당 일자의 데이터가 없습니다.";
   }
 }
 

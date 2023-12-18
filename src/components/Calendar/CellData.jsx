@@ -71,7 +71,10 @@ export const CellRender = (value) => {
     <ul className="attendance-status">
       {listData.map((item) => (
         <li key={dayjs(item.attendanceDate)}>
-          <StatusRender attendanceStatus={item.attendanceStatus} />
+          <StatusRender
+            attendanceStatus={item.attendanceStatus}
+            date={item.attendanceDate}
+          />
         </li>
       ))}
     </ul>
