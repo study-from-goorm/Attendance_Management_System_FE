@@ -25,16 +25,18 @@ const personalDataSlice = createSlice({
       state.statusCount = payload.statusCount;
     },
     removePersonalData: (state) => {
-      state.selectedPeriod = initialState.selectedPeriod;
       state.playerName = initialState.playerName;
       state.courseName = initialState.courseName;
-      state.attendanceData = initialState.attendanceData;
+      state.totalDays = initialState.totalDays;
+      state.statusCount = initialState.statusCount;
     },
-    setSelectedPeriod: (state, { payload }) => {},
+    setNullData: (state) => {
+      return { ...state, statusCount: initialState.statusCount };
+    },
   },
 });
 
-export const { setPersonalData, removePersonalData } =
+export const { setPersonalData, removePersonalData, setNullData } =
   personalDataSlice.actions;
 export const getPersonalData = (state) => state.personalData;
 export default personalDataSlice.reducer;

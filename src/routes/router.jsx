@@ -40,6 +40,9 @@ import Application, {
   action as applicationAction,
 } from "../pages/Admin/Applications/Application";
 import Setting from "../pages/Setting";
+import DailyInfo, {
+  loader as playerDailyLoader,
+} from "../pages/Player/DailyInfo";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,11 +61,13 @@ const router = createBrowserRouter(
           errorElement={<ErrorPage />}
         >
           <Route index element={<Navigate to="main" />} />
-          <Route
-            path="main"
-            loader={playerLoader}
-            element={<PlayerMainPage />}
-          />
+          <Route path="main" loader={playerLoader} element={<PlayerMainPage />}>
+            <Route
+              path="dailyInfo"
+              element={<DailyInfo />}
+              loader={playerDailyLoader}
+            />
+          </Route>
           <Route path="apply" element={<PlayerApplyPage />} />
           <Route
             path="apply/result"
